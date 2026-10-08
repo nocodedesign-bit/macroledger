@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep FedWatch chart rendering in its dedicated chart module; join optional market closes by exact ledger date to prevent fabricated or mismatched overlays.
+- Use the shared Shadcn calendar picker for FedWatch date fields and store meeting dates as optional ISO dates on ledger records so older records remain readable.
