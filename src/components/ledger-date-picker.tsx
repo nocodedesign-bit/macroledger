@@ -19,7 +19,7 @@ export function LedgerDatePicker({ id, label, value, onChange }: { id: string; l
         </Button>
       </PopoverTrigger>
       <PopoverContent className="pointer-events-auto w-auto p-0" align="start">
-        <Calendar mode="single" selected={date} defaultMonth={date} captionLayout="dropdown" startMonth={new Date(2000, 0)} endMonth={new Date(2100, 11)} onSelect={(selected) => { if (selected) { onChange(format(selected, "yyyy-MM-dd")); setOpen(false); } }} autoFocus className="pointer-events-auto p-3" />
+        <Calendar mode="single" selected={date} defaultMonth={date ?? new Date()} captionLayout="dropdown" startMonth={new Date(2000, 0)} endMonth={new Date(2100, 11)} onSelect={(selected) => { if (selected) { onChange(format(selected, "yyyy-MM-dd")); setOpen(false); } }} autoFocus className="pointer-events-auto p-3" />
       </PopoverContent>
     </Popover>
   );
