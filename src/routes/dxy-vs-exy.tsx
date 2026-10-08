@@ -28,7 +28,7 @@ function correlation(xs: number[], ys: number[]) {
   if (n < 3) return null;
   const mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
   let num = 0, dx = 0, dy = 0;
-  for (let i = 0; i < n; i++) { num += (xs[i] - mx) * (ys[i] - my); dx += (xs[i] - mx) ** 2; dy += (ys[i] - my) ** 2; }
+  for (let i = 0; i < n; i++) { num += (xs[i]! - mx) * (ys[i]! - my); dx += (xs[i]! - mx) ** 2; dy += (ys[i]! - my) ** 2; }
   return dx && dy ? num / Math.sqrt(dx * dy) : null;
 }
 
@@ -40,13 +40,13 @@ function DxyExyPage() {
   const prev = entries[entries.length - 2];
 
   // daily % returns for correlation
-  const rets = entries.slice(1).map((e, i) => ({ d: e.dxy / entries[i].dxy - 1, e: e.exy / entries[i].exy - 1 }));
+  const rets = entries.slice(1).map((e, i) => ({ d: e.dxy / entries[i]!.dxy - 1, e: e.exy / entries[i]!.exy - 1 }));
   const corr = correlation(rets.map((r) => r.d), rets.map((r) => r.e));
 
   const save = (ev: React.FormEvent) => {
     ev.preventDefault();
     const dxy = Number(form.dxy), exy = Number(form.exy);
-    if (!(dxy > 0) || !(exy > 0)) return toast.error("Enter valid positive closes");
+    if (!(dxy > 0) || !(exy > 0)) { toast.error("Enter valid positive closes"); return; }
     upsert({ date: form.date, dxy, exy });
     toast.success("Daily close logged");
     setOpen(false);

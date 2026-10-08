@@ -32,7 +32,7 @@ function FedWatchPage() {
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     const cut = Number(form.cut), hold = Number(form.hold), hike = Number(form.hike || 0);
-    if ([cut, hold, hike].some((n) => isNaN(n) || n < 0 || n > 100)) return toast.error("Probabilities must be 0–100");
+    if ([cut, hold, hike].some((n) => isNaN(n) || n < 0 || n > 100)) { toast.error("Probabilities must be 0–100"); return; }
     upsert({ date: form.date, cut, hold, hike });
     toast.success("Entry logged");
     setOpen(false);
