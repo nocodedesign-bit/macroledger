@@ -13,6 +13,8 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AccountProvider } from "@/hooks/use-account";
+import { AccountMenu } from "@/components/account-menu";
 
 function NotFoundComponent() {
   return (
@@ -117,10 +119,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AccountProvider>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <div className="min-h-screen">
         <header className="border-b border-border bg-card/60 backdrop-blur">
-          <div className="mx-auto flex max-w-6xl items-center gap-6 px-4">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 px-4 sm:gap-x-6">
             <span className="py-4 font-mono text-sm font-semibold tracking-widest text-primary">MACRO LEDGER</span>
             <nav className="flex gap-1">
               {([["/", "FedWatch Tracker"], ["/dxy-vs-exy", "DXY vs EXY"]] as const).map(([to, label]) => (
@@ -131,11 +134,13 @@ function RootComponent() {
                 </Link>
               ))}
             </nav>
+            <AccountMenu />
           </div>
         </header>
         <Outlet />
       </div>
       <Toaster />
+      </AccountProvider>
     </QueryClientProvider>
   );
 }
