@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DxyVsExyRouteImport } from './routes/dxy-vs-exy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DxyVsExyRoute = DxyVsExyRouteImport.update({
+  id: '/dxy-vs-exy',
+  path: '/dxy-vs-exy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dxy-vs-exy': typeof DxyVsExyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dxy-vs-exy': typeof DxyVsExyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dxy-vs-exy': typeof DxyVsExyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dxy-vs-exy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dxy-vs-exy'
+  id: '__root__' | '/' | '/dxy-vs-exy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DxyVsExyRoute: typeof DxyVsExyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dxy-vs-exy': {
+      id: '/dxy-vs-exy'
+      path: '/dxy-vs-exy'
+      fullPath: '/dxy-vs-exy'
+      preLoaderRoute: typeof DxyVsExyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DxyVsExyRoute: DxyVsExyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
