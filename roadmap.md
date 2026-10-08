@@ -1,3 +1,4 @@
-- [ ] Enable Google sign-in and private profile storage.
-- [ ] Move manual ledgers to private online storage and preserve browser entries.
-- [ ] Verify login surface and authenticated save/read/edit/delete.
+- [x] Enable Google sign-in and private profile storage.
+- [x] Move manual ledgers to private online storage and preserve browser entries through explicit account import.
+- [x] Verify the login dialog, signed-out privacy, page test, and database security checks.
+- [ ] Verify authenticated save/read/edit/delete — blocked until the first user signs in with Google; no account exists to test.
