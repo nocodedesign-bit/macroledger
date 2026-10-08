@@ -1,0 +1,3 @@
+- [ ] Enable Google sign-in and private profile storage.
+- [ ] Move manual ledgers to private online storage and preserve browser entries.
+- [ ] Verify login surface and authenticated save/read/edit/delete.
