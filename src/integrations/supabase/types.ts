@@ -14,7 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ledger_entries: {
+        Row: {
+          data: Json
+          ledger_key: string
+          record_date: string
+          user_id: string
+        }
+        Insert: {
+          data: Json
+          ledger_key: string
+          record_date: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          ledger_key?: string
+          record_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
