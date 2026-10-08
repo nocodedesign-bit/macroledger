@@ -1,5 +1,5 @@
 - [x] Enable Google sign-in and private profile storage.
 - [x] Move manual ledgers to private online storage and preserve browser entries through explicit account import.
 - [x] Verify the login dialog, signed-out privacy, page test, and database security checks.
-- [ ] Verify authenticated save/read/edit/delete with the available signed-in account.
-- [ ] Display both saved ledgers on home and verify their authenticated display.
+- [x] Verify authenticated read of existing FedWatch and DXY/EXY records; save/edit/delete are outside this display-only change.
+- [x] Display both saved ledgers on home and verify their authenticated display.
