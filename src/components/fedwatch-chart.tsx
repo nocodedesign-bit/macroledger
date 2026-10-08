@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export type FedEntry = { date: string; cut: number; hold: number; hike: number; dxy?: number; us02y?: number };
+export type FedEntry = { date: string; cut: number; hold: number; hike: number; dxy?: number | undefined; us02y?: number | undefined };
 
 export function FedWatchChart({ entries, dollarCloses }: { entries: FedEntry[]; dollarCloses: { date: string; dxy: number }[] }) {
   const [overlay, setOverlay] = useState("dxy");
