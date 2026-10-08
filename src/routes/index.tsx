@@ -10,15 +10,14 @@ import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { FedWatchChart, type FedEntry } from "@/components/fedwatch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
 import { useAccount } from "@/hooks/use-account";
-import { DxyExyLedger } from "@/components/dxy-exy-ledger";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FedWatch & DXY vs EXY — Macro Ledger" },
-      { name: "description", content: "View your private FedWatch probabilities and DXY/EXY daily closes together." },
-      { property: "og:title", content: "FedWatch & DXY vs EXY — Macro Ledger" },
-      { property: "og:description", content: "View your private FedWatch probabilities and DXY/EXY daily closes together." },
+      { title: "FedWatch Tracker — Macro Ledger" },
+      { name: "description", content: "Log daily FedWatch rate probabilities for the next FOMC meeting." },
+      { property: "og:title", content: "FedWatch Tracker — Macro Ledger" },
+      { property: "og:description", content: "Log daily FedWatch rate probabilities for the next FOMC meeting." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -107,8 +106,6 @@ function FedWatchPage() {
           </tbody>
         </table>
       </div>
-
-      <DxyExyLedger embedded />
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
