@@ -11,3 +11,5 @@
 
 - Keep FedWatch chart rendering in its dedicated chart module; join optional market closes by exact ledger date to prevent fabricated or mismatched overlays.
 - Use the shared Shadcn calendar picker for FedWatch date fields and store meeting dates as optional ISO dates on ledger records so older records remain readable.
+- Keep account state in one root provider; public ledger pages expose no private rows while signed out and all cloud access is owner-scoped through RLS.
+- Store ledger payloads in a shared user/key/date table to preserve existing manual record shapes; browser ledgers are explicit imports that never overwrite online records.

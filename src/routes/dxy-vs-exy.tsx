@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { todayISO, useLedger } from "@/hooks/use-ledger";
+import { useAccount } from "@/hooks/use-account";
 
 export const Route = createFileRoute("/dxy-vs-exy")({
   head: () => ({
@@ -35,7 +36,9 @@ function correlation(xs: number[], ys: number[]) {
 }
 
 function DxyExyPage() {
-  const { entries, upsert, remove } = useLedger<Entry>("ledger:dxy-exy");
+  const { entries, upsert, remove, error } = useLedger<Entry>("ledger:dxy-exy");
+  const { user } = useAccount();
+  const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ date: todayISO(), dxy: "", exy: "" });
   const latest = entries[entries.length - 1];
@@ -45,13 +48,14 @@ function DxyExyPage() {
   const rets = entries.slice(1).map((e, i) => ({ d: e.dxy / entries[i]!.dxy - 1, e: e.exy / entries[i]!.exy - 1 }));
   const corr = correlation(rets.map((r) => r.d), rets.map((r) => r.e));
 
-  const save = (ev: React.FormEvent) => {
+  const save = async (ev: React.FormEvent) => {
     ev.preventDefault();
     const dxy = Number(form.dxy), exy = Number(form.exy);
     if (!(dxy > 0) || !(exy > 0)) { toast.error("Enter valid positive closes"); return; }
-    upsert({ date: form.date, dxy, exy });
-    toast.success("Daily close logged");
-    setOpen(false);
+    setSaving(true);
+    try { await upsert({ date: form.date, dxy, exy }); toast.success("Daily close logged"); setOpen(false); }
+    catch { toast.error("Could not save close. Please retry."); }
+    finally { setSaving(false); }
   };
 
   const card = (key: "dxy" | "exy", name: string, sub: string) => {
@@ -81,10 +85,13 @@ function DxyExyPage() {
           <h1 className="text-2xl font-semibold tracking-tight">DXY vs EXY</h1>
           <p className="text-sm text-muted-foreground">Manual daily close ledger — US Dollar Index against the Euro Index.</p>
         </div>
-        <Button onClick={() => { setForm({ date: todayISO(), dxy: "", exy: "" }); setOpen(true); }}>
+        <Button disabled={!user} onClick={() => { setForm({ date: todayISO(), dxy: "", exy: "" }); setOpen(true); }}>
           <Plus /> Log today
         </Button>
       </div>
+
+      {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
+      {error && <p role="alert" className="text-sm text-negative">Could not load your closes. Please refresh to retry.</p>}
 
       <div className="grid gap-4 md:grid-cols-3">
         {card("dxy", "DXY", "US Dollar Index")}
@@ -159,7 +166,7 @@ function DxyExyPage() {
               <div className="space-y-2"><Label htmlFor="exy">EXY daily close</Label><Input id="exy" type="number" step="any" required placeholder="e.g. 108.400" value={form.exy} onChange={(e) => setForm({ ...form, exy: e.target.value })} /></div>
             </div>
             {entries.some((x) => x.date === form.date) && <p className="text-xs text-muted-foreground">An entry for this date exists and will be replaced.</p>}
-            <DialogFooter><Button type="submit">Save close</Button></DialogFooter>
+            <DialogFooter><Button type="submit" disabled={saving}>{saving ? "Saving…" : "Save close"}</Button></DialogFooter>
           </form>
         </DialogContent>
       </Dialog>

@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { FedWatchChart, type FedEntry } from "@/components/fedwatch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
+import { useAccount } from "@/hooks/use-account";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,14 +26,16 @@ export const Route = createFileRoute("/")({
 });
 
 function FedWatchPage() {
-  const { entries, upsert, remove } = useLedger<FedEntry>("ledger:fedwatch");
+  const { entries, upsert, remove, error } = useLedger<FedEntry>("ledger:fedwatch");
+  const { user } = useAccount();
+  const [saving, setSaving] = useState(false);
   const { entries: dollarCloses } = useLedger<{ date: string; dxy: number; exy: number }>("ledger:dxy-exy");
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ date: todayISO(), fomcMeeting: "", cut: "", hold: "", hike: "", dxy: "", us02y: "" });
   const latest = entries[entries.length - 1];
   const prev = entries[entries.length - 2];
 
-  const save = (e: React.FormEvent) => {
+  const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.date || !form.fomcMeeting) { toast.error("Select a record date and FOMC meeting date"); return; }
     if (form.fomcMeeting < form.date) { toast.error("FOMC meeting must be on or after the record date"); return; }
@@ -41,9 +44,10 @@ function FedWatchPage() {
     const dxy = form.dxy.trim() === "" ? undefined : Number(form.dxy);
     const us02y = form.us02y.trim() === "" ? undefined : Number(form.us02y);
     if ((dxy !== undefined && (!Number.isFinite(dxy) || dxy <= 0)) || (us02y !== undefined && (!Number.isFinite(us02y) || us02y < 0))) { toast.error("Enter a positive DXY close and a non-negative US02Y yield"); return; }
-    upsert({ date: form.date, fomcMeeting: form.fomcMeeting, cut, hold, hike, dxy, us02y });
-    toast.success("Entry logged");
-    setOpen(false);
+    setSaving(true);
+    try { await upsert({ date: form.date, fomcMeeting: form.fomcMeeting, cut, hold, hike, dxy, us02y }); toast.success("Entry logged"); setOpen(false); }
+    catch { toast.error("Could not save entry. Please retry."); }
+    finally { setSaving(false); }
   };
 
   return (
@@ -53,10 +57,13 @@ function FedWatchPage() {
           <h1 className="text-2xl font-semibold tracking-tight">FedWatch Tracker</h1>
           <p className="text-sm text-muted-foreground">Manual daily ledger of next-meeting rate probabilities.</p>
         </div>
-        <Button onClick={() => { setForm({ date: todayISO(), fomcMeeting: latest?.fomcMeeting && latest.fomcMeeting >= todayISO() ? latest.fomcMeeting : "", cut: "", hold: "", hike: "", dxy: "", us02y: "" }); setOpen(true); }}>
+        <Button disabled={!user} onClick={() => { setForm({ date: todayISO(), fomcMeeting: latest?.fomcMeeting && latest.fomcMeeting >= todayISO() ? latest.fomcMeeting : "", cut: "", hold: "", hike: "", dxy: "", us02y: "" }); setOpen(true); }}>
           <Plus /> Log today
         </Button>
       </div>
+
+      {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
+      {error && <p role="alert" className="text-sm text-negative">Could not load your entries. Please refresh to retry.</p>}
 
       <div className="grid gap-4 sm:grid-cols-3">
         {(["cut", "hold", "hike"] as const).map((k) => {
@@ -118,7 +125,7 @@ function FedWatchPage() {
               <div className="space-y-2"><Label htmlFor="fed-dxy">DXY close (optional)</Label><Input id="fed-dxy" type="number" min="0" step="any" value={form.dxy} onChange={(e) => setForm({ ...form, dxy: e.target.value })} /></div>
               <div className="space-y-2"><Label htmlFor="fed-us02y">US02Y yield % (optional)</Label><Input id="fed-us02y" type="number" min="0" step="any" value={form.us02y} onChange={(e) => setForm({ ...form, us02y: e.target.value })} /></div>
             </div>
-            <DialogFooter><Button type="submit">Save entry</Button></DialogFooter>
+            <DialogFooter><Button type="submit" disabled={saving}>{saving ? "Saving…" : "Save entry"}</Button></DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
