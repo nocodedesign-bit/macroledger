@@ -110,6 +110,7 @@ function LandingPage() {
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
         © 2026 Macro Ledger. All rights reserved.
       </footer>
+      <RegisterDialog open={registerOpen} onOpenChange={setRegisterOpen} />
     </div>
   );
 }
