@@ -39,6 +39,8 @@ const features = [
 ];
 
 function LandingPage() {
+  const { user } = useAccount();
+  const [registerOpen, setRegisterOpen] = useState(false);
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
