@@ -10,43 +10,58 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DxyVsExyRouteImport } from './routes/dxy-vs-exy'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppDxyVsExyRouteImport } from './routes/_app.dxy-vs-exy'
+import { Route as AppFedwatchRouteImport } from './routes/_app.fedwatch'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DxyVsExyRoute = DxyVsExyRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppDxyVsExyRoute = AppDxyVsExyRouteImport.update({
   id: '/dxy-vs-exy',
   path: '/dxy-vs-exy',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFedwatchRoute = AppFedwatchRouteImport.update({
+  id: '/fedwatch',
+  path: '/fedwatch',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dxy-vs-exy': typeof DxyVsExyRoute
+  '/dxy-vs-exy': typeof AppDxyVsExyRoute
+  '/fedwatch': typeof AppFedwatchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dxy-vs-exy': typeof DxyVsExyRoute
+  '/dxy-vs-exy': typeof AppDxyVsExyRoute
+  '/fedwatch': typeof AppFedwatchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dxy-vs-exy': typeof DxyVsExyRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/dxy-vs-exy': typeof AppDxyVsExyRoute
+  '/_app/fedwatch': typeof AppFedwatchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dxy-vs-exy'
+  fullPaths: '/' | '/dxy-vs-exy' | '/fedwatch'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dxy-vs-exy'
-  id: '__root__' | '/' | '/dxy-vs-exy'
+  to: '/' | '/dxy-vs-exy' | '/fedwatch'
+  id: '__root__' | '/' | '/_app' | '/_app/dxy-vs-exy' | '/_app/fedwatch'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DxyVsExyRoute: typeof DxyVsExyRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -58,19 +73,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dxy-vs-exy': {
-      id: '/dxy-vs-exy'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/dxy-vs-exy': {
+      id: '/_app/dxy-vs-exy'
       path: '/dxy-vs-exy'
       fullPath: '/dxy-vs-exy'
-      preLoaderRoute: typeof DxyVsExyRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppDxyVsExyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/fedwatch': {
+      id: '/_app/fedwatch'
+      path: '/fedwatch'
+      fullPath: '/fedwatch'
+      preLoaderRoute: typeof AppFedwatchRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppDxyVsExyRoute: typeof AppDxyVsExyRoute
+  AppFedwatchRoute: typeof AppFedwatchRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDxyVsExyRoute: AppDxyVsExyRoute,
+  AppFedwatchRoute: AppFedwatchRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DxyVsExyRoute: DxyVsExyRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
