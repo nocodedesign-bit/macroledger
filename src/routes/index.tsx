@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BarChart3, LineChart, NotebookPen, Rocket } from "lucide-react";
+import { BarChart3, LineChart, NotebookPen, Rocket, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AccountMenu } from "@/components/account-menu";
+import { RegisterDialog } from "@/components/register-dialog";
+import { useAccount } from "@/hooks/use-account";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +39,8 @@ const features = [
 ];
 
 function LandingPage() {
+  const { user } = useAccount();
+  const [registerOpen, setRegisterOpen] = useState(false);
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
@@ -44,9 +49,15 @@ function LandingPage() {
             <span className="text-primary">MACRO</span> <span className="text-foreground">LEDGER</span>
           </span>
           <div className="flex items-center gap-2">
-            <Button asChild className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]">
-              <Link to="/fedwatch">Enter the App</Link>
-            </Button>
+            {user ? (
+              <Button asChild className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]">
+                <Link to="/fedwatch">Enter the App</Link>
+              </Button>
+            ) : (
+              <Button className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]" onClick={() => setRegisterOpen(true)}>
+                <UserPlus /> Register
+              </Button>
+            )}
             <AccountMenu />
           </div>
         </div>
@@ -67,9 +78,15 @@ function LandingPage() {
               stored privately in your account.
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105">
-                <Link to="/fedwatch">Enter the App <Rocket /></Link>
-              </Button>
+              {user ? (
+                <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105">
+                  <Link to="/fedwatch">Enter the App <Rocket /></Link>
+                </Button>
+              ) : (
+                <Button size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105" onClick={() => setRegisterOpen(true)}>
+                  Register <UserPlus />
+                </Button>
+              )}
             </div>
             <p className="mt-6 text-xs text-muted-foreground">CUT · HOLD · HIKE — updated by hand, every trading day.</p>
           </div>
@@ -93,6 +110,7 @@ function LandingPage() {
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
         © 2026 Macro Ledger. All rights reserved.
       </footer>
+      <RegisterDialog open={registerOpen} onOpenChange={setRegisterOpen} />
     </div>
   );
 }
