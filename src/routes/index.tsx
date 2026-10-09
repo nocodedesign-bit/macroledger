@@ -78,9 +78,15 @@ function LandingPage() {
               stored privately in your account.
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105">
-                <Link to="/fedwatch">Enter the App <Rocket /></Link>
-              </Button>
+              {user ? (
+                <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105">
+                  <Link to="/fedwatch">Enter the App <Rocket /></Link>
+                </Button>
+              ) : (
+                <Button size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105" onClick={() => setRegisterOpen(true)}>
+                  Register <UserPlus />
+                </Button>
+              )}
             </div>
             <p className="mt-6 text-xs text-muted-foreground">CUT · HOLD · HIKE — updated by hand, every trading day.</p>
           </div>
