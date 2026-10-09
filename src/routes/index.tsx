@@ -21,19 +21,16 @@ const features = [
   {
     icon: BarChart3,
     title: "FedWatch Probability Tracking",
-    titleAr: "تتبّع احتمالات الفيدرالي",
     desc: "Log daily CUT · HOLD · HIKE odds for the next FOMC meeting and watch the trend chart evolve.",
   },
   {
     icon: LineChart,
     title: "Macro Correlations",
-    titleAr: "العلاقات الماكروية",
     desc: "Overlay DXY and US02Y on your probabilities and measure the inverse DXY vs EXY relationship.",
   },
   {
     icon: NotebookPen,
     title: "Daily Manual Ledger",
-    titleAr: "دفتر يومي يدوي",
     desc: "Every record is entered by hand and saved privately to your account — no mock data, ever.",
   },
 ];
@@ -48,7 +45,7 @@ function LandingPage() {
           </span>
           <div className="flex items-center gap-2">
             <Button asChild className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]">
-              <Link to="/fedwatch">دخول إلى التطبيق</Link>
+              <Link to="/fedwatch">Enter the App</Link>
             </Button>
             <AccountMenu />
           </div>
@@ -60,16 +57,18 @@ function LandingPage() {
           <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
           <div className="relative mx-auto max-w-3xl px-4 pb-16 pt-20 text-center sm:pt-28">
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">FedWatch Tracker · DXY vs EXY</p>
-            <h1 dir="rtl" lang="ar" className="mt-6 text-4xl font-bold leading-tight sm:text-5xl">
-              مرحباً بك في منصة التحليل الماكروي
+            <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl">
+              Welcome to the Macro Analysis Platform
               <span className="mt-2 block text-primary">FedWatch Tracker</span>
             </h1>
-            <p dir="rtl" lang="ar" className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              سجّل يومياً احتمالات قرار الفيدرالي في اجتماعه القادم (خفض، تثبيت، رفع)، وتتبّع العلاقة العكسية بين مؤشر الدولار DXY ومؤشر اليورو EXY — كل ذلك في دفاتر يومية يدوية تُحفظ بشكل خاص في حسابك.
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              Log the daily odds for the next Federal Reserve decision — cut, hold or hike — and track the inverse
+              relationship between the US Dollar Index (DXY) and the Euro Index (EXY), all kept in manual daily ledgers
+              stored privately in your account.
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105">
-                <Link to="/fedwatch">دخول إلى التطبيق <Rocket /></Link>
+                <Link to="/fedwatch">Enter the App <Rocket /></Link>
               </Button>
             </div>
             <p className="mt-6 text-xs text-muted-foreground">CUT · HOLD · HIKE — updated by hand, every trading day.</p>
@@ -78,13 +77,12 @@ function LandingPage() {
 
         <section className="mx-auto max-w-6xl px-4 pb-20">
           <div className="grid gap-4 md:grid-cols-3">
-            {features.map(({ icon: Icon, title, titleAr, desc }) => (
+            {features.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/40">
                 <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h2 className="mt-4 text-lg font-semibold">{title}</h2>
-                <p dir="rtl" lang="ar" className="mt-1 text-sm text-primary/80">{titleAr}</p>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{desc}</p>
               </div>
             ))}
