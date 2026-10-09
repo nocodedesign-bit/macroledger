@@ -49,9 +49,15 @@ function LandingPage() {
             <span className="text-primary">MACRO</span> <span className="text-foreground">LEDGER</span>
           </span>
           <div className="flex items-center gap-2">
-            <Button asChild className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]">
-              <Link to="/fedwatch">Enter the App</Link>
-            </Button>
+            {user ? (
+              <Button asChild className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]">
+                <Link to="/fedwatch">Enter the App</Link>
+              </Button>
+            ) : (
+              <Button className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]" onClick={() => setRegisterOpen(true)}>
+                <UserPlus /> Register
+              </Button>
+            )}
             <AccountMenu />
           </div>
         </div>
