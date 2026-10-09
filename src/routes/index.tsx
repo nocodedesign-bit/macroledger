@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BarChart3, LineChart, NotebookPen, Rocket } from "lucide-react";
+import { BarChart3, LineChart, NotebookPen, Rocket, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AccountMenu } from "@/components/account-menu";
+import { RegisterDialog } from "@/components/register-dialog";
+import { useAccount } from "@/hooks/use-account";
 
 export const Route = createFileRoute("/")({
   head: () => ({
