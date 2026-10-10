@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import type { Json } from "@/integrations/supabase/types";
 
-export function AccountMenu() {
+export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
   const { user, ready } = useAccount();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -66,8 +66,8 @@ export function AccountMenu() {
     finally { setBusy(false); }
   };
   return <>
-    <Button variant="ghost" className="ml-auto shrink-0" disabled={!ready} onClick={() => setOpen(true)}>
-      {user ? <UserRound /> : <LogIn />}<span className="hidden sm:inline">{user ? "My account" : "Sign in"}</span>
+    <Button variant={iconOnly ? "secondary" : "ghost"} aria-label={user ? "My account" : "Sign in"} title={user ? "My account" : "Sign in"} className={iconOnly ? "h-10 w-10 shrink-0 rounded-full p-0 text-muted-foreground [&_svg]:size-5 sm:h-11 sm:w-11" : "ml-auto shrink-0"} disabled={!ready} onClick={() => setOpen(true)}>
+      {iconOnly || user ? <UserRound /> : <LogIn />}{!iconOnly && <span className="hidden sm:inline">{user ? "My account" : "Sign in"}</span>}
     </Button>
     <Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogHeader><DialogTitle>{user ? "My account" : "Sign in to Macro Ledger"}</DialogTitle></DialogHeader>
       {user ? <div className="space-y-5">

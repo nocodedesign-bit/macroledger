@@ -10,6 +10,7 @@ import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { FedWatchChart, type FedEntry } from "@/components/fedwatch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
 import { useAccount } from "@/hooks/use-account";
+import { LedgerSummaryCard } from "@/components/ledger-summary-card";
 
 export const Route = createFileRoute("/_app/fedwatch")({
   head: () => ({
@@ -51,13 +52,13 @@ function FedWatchPage() {
   };
 
   return (
-    <main className="mx-auto max-w-7xl space-y-6 px-4 py-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Fed Watch</h1>
-          <p className="text-sm text-muted-foreground">Manual daily ledger of next-meeting rate probabilities.</p>
+    <main className="ledger-page mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 sm:py-10">
+      <div className="grid grid-cols-1 items-end gap-5 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold sm:text-3xl">Fed Watch</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Manual daily ledger of next-meeting rate probabilities.</p>
         </div>
-        <Button disabled={!user} onClick={() => { setForm({ date: todayISO(), fomcMeeting: latest?.fomcMeeting && latest.fomcMeeting >= todayISO() ? latest.fomcMeeting : "", cut: "", hold: "", hike: "", dxy: "", us02y: "" }); setOpen(true); }}>
+        <Button className="ledger-log h-12 w-full text-base font-semibold sm:w-auto sm:px-7 [&_svg]:size-5" disabled={!user} onClick={() => { setForm({ date: todayISO(), fomcMeeting: latest?.fomcMeeting && latest.fomcMeeting >= todayISO() ? latest.fomcMeeting : "", cut: "", hold: "", hike: "", dxy: "", us02y: "" }); setOpen(true); }}>
           <Plus /> Log today
         </Button>
       </div>
@@ -69,15 +70,7 @@ function FedWatchPage() {
         {(["cut", "hold", "hike"] as const).map((k) => {
           const d = latest && prev ? latest[k] - prev[k] : null;
           return (
-            <div key={k} className="rounded-lg border border-border bg-card p-5">
-              <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{k}</div>
-              <div className="mt-2 font-mono text-3xl font-semibold">{latest ? `${latest[k].toFixed(1)}%` : "—"}</div>
-              {d !== null && (
-                <div className={`mt-1 font-mono text-sm ${d >= 0 ? "text-positive" : "text-negative"}`}>
-                  {d >= 0 ? "+" : ""}{d.toFixed(1)} pts 1D
-                </div>
-              )}
-            </div>
+            <LedgerSummaryCard key={k} label={k} value={latest ? `${latest[k].toFixed(1)}%` : "—"} change={d === null ? undefined : `${d >= 0 ? "+" : ""}${d.toFixed(1)} pts 1D`} />
           );
         })}
       </div>
