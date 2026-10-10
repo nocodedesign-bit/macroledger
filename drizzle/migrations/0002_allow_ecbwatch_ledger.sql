@@ -1,0 +1,2 @@
+ALTER TABLE public.ledger_entries DROP CONSTRAINT IF EXISTS ledger_entries_ledger_key_check;
+ALTER TABLE public.ledger_entries ADD CONSTRAINT ledger_entries_ledger_key_check CHECK (ledger_key IN ('ledger:fedwatch', 'ledger:dxy-exy', 'ledger:ecbwatch'));

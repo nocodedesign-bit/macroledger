@@ -69,13 +69,13 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.16 0.012 250);
+  --background: #12161c;
   --foreground: oklch(0.95 0.005 250);
   --card: oklch(0.2 0.014 250);
   --card-foreground: oklch(0.95 0.005 250);
   --popover: oklch(0.2 0.014 250);
   --popover-foreground: oklch(0.95 0.005 250);
-  --primary: oklch(0.82 0.15 85);
+  --primary: #f5b041;
   --primary-foreground: oklch(0.18 0.02 250);
   --secondary: oklch(0.26 0.015 250);
   --secondary-foreground: oklch(0.95 0.005 250);
@@ -91,7 +91,7 @@
   --exy: oklch(0.7 0.14 240);
   --border: oklch(0.3 0.015 250);
   --input: oklch(0.32 0.015 250);
-  --ring: oklch(0.82 0.15 85);
+  --ring: #f5b041;
   --chart-1: oklch(0.82 0.15 85);
   --chart-2: oklch(0.7 0.14 240);
   --chart-3: oklch(0.74 0.16 155);

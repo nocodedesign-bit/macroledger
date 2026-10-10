@@ -14,9 +14,9 @@ import { useAccount } from "@/hooks/use-account";
 export const Route = createFileRoute("/_app/fedwatch")({
   head: () => ({
     meta: [
-      { title: "FedWatch Tracker — Macro Ledger" },
+      { title: "Fed Watch — Macro Ledger" },
       { name: "description", content: "Log daily FedWatch rate probabilities for the next FOMC meeting." },
-      { property: "og:title", content: "FedWatch Tracker — Macro Ledger" },
+      { property: "og:title", content: "Fed Watch — Macro Ledger" },
       { property: "og:description", content: "Log daily FedWatch rate probabilities for the next FOMC meeting." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -51,10 +51,10 @@ function FedWatchPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl space-y-6 px-4 py-8">
+    <main className="mx-auto max-w-7xl space-y-6 px-4 py-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">FedWatch Tracker</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Fed Watch</h1>
           <p className="text-sm text-muted-foreground">Manual daily ledger of next-meeting rate probabilities.</p>
         </div>
         <Button disabled={!user} onClick={() => { setForm({ date: todayISO(), fomcMeeting: latest?.fomcMeeting && latest.fomcMeeting >= todayISO() ? latest.fomcMeeting : "", cut: "", hold: "", hike: "", dxy: "", us02y: "" }); setOpen(true); }}>
@@ -65,7 +65,7 @@ function FedWatchPage() {
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your entries. Please refresh to retry.</p>}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {(["cut", "hold", "hike"] as const).map((k) => {
           const d = latest && prev ? latest[k] - prev[k] : null;
           return (
