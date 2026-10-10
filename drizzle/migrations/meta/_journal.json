@@ -15,6 +15,13 @@
       "when": 1791488567667,
       "tag": "0001_restrict_profile_trigger_execution",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791590790108,
+      "tag": "0002_allow_ecbwatch_ledger",
+      "breakpoints": true
     }
   ]
 }
