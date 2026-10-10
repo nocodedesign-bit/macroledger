@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { useAccount } from "@/hooks/use-account";
+import { LedgerSummaryCard } from "@/components/ledger-summary-card";
 
 export const Route = createFileRoute("/_app/dxy-vs-exy")({
   head: () => ({
@@ -61,31 +62,23 @@ function DxyExyPage() {
   const card = (key: "dxy" | "exy", name: string, sub: string) => {
     const pct = latest && prev ? (latest[key] / prev[key] - 1) * 100 : null;
     return (
-      <div className="rounded-lg border border-border bg-card p-5">
-        <div className="flex items-center gap-2">
-          <span className={`h-2.5 w-2.5 rounded-full ${key === "dxy" ? "bg-dxy" : "bg-exy"}`} />
-          <span className="font-mono text-sm font-semibold">{name}</span>
-          <span className="text-xs text-muted-foreground">{sub}</span>
-        </div>
-        <div className="mt-3 font-mono text-3xl font-semibold">{latest ? latest[key].toFixed(3) : "—"}</div>
-        <div className="mt-1 flex items-center gap-2 font-mono text-sm">
-          {pct === null ? <span className="text-muted-foreground">1D change needs 2 entries</span> : (
-            <span className={pct >= 0 ? "text-positive" : "text-negative"}>{pct >= 0 ? "▲ +" : "▼ "}{pct.toFixed(2)}% 1D</span>
-          )}
-          {latest && <span className="text-xs text-muted-foreground">· {latest.date}</span>}
-        </div>
-      </div>
+      <LedgerSummaryCard
+        label={<span className="flex min-w-0 items-center gap-2"><span className={`h-2 w-2 shrink-0 rounded-full ${key === "dxy" ? "bg-dxy" : "bg-exy"}`} />{name}<span className="truncate text-xs normal-case">{sub}</span></span>}
+        value={latest ? latest[key].toFixed(3) : "—"}
+        change={pct === null ? undefined : `${pct >= 0 ? "+" : ""}${pct.toFixed(2)}% 1D`}
+        detail={latest?.date}
+      />
     );
   };
 
   return (
-    <main className="mx-auto max-w-7xl space-y-6 px-4 py-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">DXY vs EXY</h1>
-          <p className="text-sm text-muted-foreground">Manual daily close ledger — US Dollar Index against the Euro Index.</p>
+    <main className="ledger-page mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 sm:py-10">
+      <div className="grid grid-cols-1 items-end gap-5 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold sm:text-3xl">DXY vs EXY</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Manual daily close ledger — US Dollar Index against the Euro Index.</p>
         </div>
-        <Button disabled={!user} onClick={() => { setForm({ date: todayISO(), dxy: "", exy: "" }); setOpen(true); }}>
+        <Button className="ledger-log h-12 w-full text-base font-semibold sm:w-auto sm:px-7 [&_svg]:size-5" disabled={!user} onClick={() => { setForm({ date: todayISO(), dxy: "", exy: "" }); setOpen(true); }}>
           <Plus /> Log today
         </Button>
       </div>
@@ -96,13 +89,7 @@ function DxyExyPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {card("dxy", "DXY", "US Dollar Index")}
         {card("exy", "EXY", "Euro Index")}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Correlation (daily returns)</div>
-          <div className="mt-3 font-mono text-3xl font-semibold">{corr === null ? "—" : corr.toFixed(2)}</div>
-          <div className="mt-1 text-sm text-muted-foreground">
-            {corr === null ? "Needs 4+ entries" : corr < -0.5 ? "Strong inverse relationship" : corr < 0 ? "Weak inverse relationship" : "Not inverse in this sample"}
-          </div>
-        </div>
+        <LedgerSummaryCard label="Correlation (daily returns)" value={corr === null ? "—" : corr.toFixed(2)} detail={corr === null ? "Needs 4+ entries" : corr < -0.5 ? "Strong inverse relationship" : corr < 0 ? "Weak inverse relationship" : "Not inverse in this sample"} />
       </div>
 
       <div className="rounded-lg border border-border bg-card p-5">
@@ -127,7 +114,7 @@ function DxyExyPage() {
         )}
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted text-left text-xs uppercase tracking-widest text-muted-foreground">
             <tr><th className="px-4 py-3">Date</th><th className="px-4 py-3 text-right">DXY close</th><th className="px-4 py-3 text-right">1D</th><th className="px-4 py-3 text-right">EXY close</th><th className="px-4 py-3 text-right">1D</th><th className="w-12" /></tr>
