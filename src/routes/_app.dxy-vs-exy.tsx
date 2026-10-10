@@ -93,7 +93,7 @@ function DxyExyPage() {
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your closes. Please refresh to retry.</p>}
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {card("dxy", "DXY", "US Dollar Index")}
         {card("exy", "EXY", "Euro Index")}
         <div className="rounded-lg border border-border bg-card p-5">

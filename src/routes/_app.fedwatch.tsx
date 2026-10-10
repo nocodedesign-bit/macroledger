@@ -65,7 +65,7 @@ function FedWatchPage() {
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your entries. Please refresh to retry.</p>}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {(["cut", "hold", "hike"] as const).map((k) => {
           const d = latest && prev ? latest[k] - prev[k] : null;
           return (
