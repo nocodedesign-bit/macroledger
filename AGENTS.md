@@ -14,3 +14,6 @@
 - Keep account state in one root provider; public ledger pages expose no private rows while signed out and all cloud access is owner-scoped through RLS.
 - Store ledger payloads in a shared user/key/date table to preserve existing manual record shapes; browser ledgers are explicit imports that never overwrite online records.
 - Keep ledger page presentation in a scoped app theme and shared summary-card component so all three ledgers stay visually consistent without changing the homepage.
+- Use shared configurable BOJ/BOE probability pages and currency comparison pages with separate ledger keys; this avoids divergent forms while preserving existing Fed/ECB record shapes.
+- Keep supported browser-import keys and required fields in the shared ledger catalog; this prevents currency records from being validated as probabilities.
+- Use route-derived dual dropdown navigation for bank watches and currency pairs; this keeps direct links and mobile menu labels synchronized.

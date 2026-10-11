@@ -32,7 +32,7 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
     if ([cut, hold, hike].some((n) => isNaN(n) || n < 0 || n > 100)) { toast.error("Probabilities must be 0–100"); return; }
     const indexClose = form.indexClose.trim() === "" ? undefined : Number(form.indexClose);
     const bondYield = form.bondYield.trim() === "" ? undefined : Number(form.bondYield);
-    if ((indexClose !== undefined && (!Number.isFinite(indexClose) || indexClose <= 0)) || (bondYield !== undefined && (!Number.isFinite(bondYield) || false))) { toast.error(`Enter a positive ${indexName} close and a finite ${yieldName} yield`); return; }
+    if ((indexClose !== undefined && (!Number.isFinite(indexClose) || indexClose <= 0)) || (bondYield !== undefined && !Number.isFinite(bondYield))) { toast.error(`Enter a positive ${indexName} close and a finite ${yieldName} yield`); return; }
     setSaving(true);
     try { await upsert({ date: form.date, meeting: form.meeting, cut, hold, hike, indexClose, bondYield }); toast.success("Entry logged"); setOpen(false); }
     catch { toast.error("Could not save entry. Please retry."); }

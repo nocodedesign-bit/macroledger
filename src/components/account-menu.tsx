@@ -10,6 +10,7 @@ import { useAccount } from "@/hooks/use-account";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import type { Json } from "@/integrations/supabase/types";
+import { ledgerFields, ledgerKeys } from "@/lib/ledger-catalog";
 
 export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
   const { user, ready } = useAccount();
@@ -27,7 +28,7 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
   useEffect(() => { setName(profile.data?.display_name ?? ""); }, [profile.data]);
   useEffect(() => {
     let count = 0;
-    for (const key of ["ledger:fedwatch", "ledger:ecbwatch", "ledger:dxy-exy"]) {
+    for (const key of ledgerKeys) {
       try { const rows = JSON.parse(localStorage.getItem(key) ?? "[]"); if (Array.isArray(rows)) count += rows.length; } catch { /* preserve unreadable data */ }
     }
     setLocalCount(count);
@@ -46,12 +47,12 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
     setBusy(true);
     try {
       const rows: { user_id: string; ledger_key: string; record_date: string; data: Json }[] = [];
-      for (const key of ["ledger:fedwatch", "ledger:ecbwatch", "ledger:dxy-exy"]) {
+      for (const key of ledgerKeys) {
         const entries: unknown = JSON.parse(localStorage.getItem(key) ?? "[]");
         if (!Array.isArray(entries)) throw new Error("Invalid browser ledger");
         for (const entry of entries) {
           if (!entry || typeof entry !== "object" || typeof entry.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) throw new Error("Invalid browser record");
-          const fields = key !== "ledger:dxy-exy" ? ["cut", "hold", "hike"] : ["dxy", "exy"];
+          const fields = ledgerFields[key];
           if (fields.some((field) => typeof entry[field] !== "number" || !Number.isFinite(entry[field]))) throw new Error("Invalid browser values");
           rows.push({ user_id: user.id, ledger_key: key, record_date: entry.date, data: entry as Json });
         }
