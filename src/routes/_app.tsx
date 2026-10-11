@@ -9,8 +9,8 @@ export const Route = createFileRoute("/_app")({
 function AppLayout() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const banks = [["/fedwatch", "Fed Watch"], ["/ecb-watch", "ECB Watch"], ["/boj-watch", "BOJ Watch"], ["/boe-watch", "BOE Watch"] as const;
-  const pairs = [["/dxy-vs-exy", "DXY vs EXY"], ["/dxy-vs-bxy", "DXY vs BXY"], ["/dxy-vs-jxy", "DXY vs JXY"] as const;
+  const banks = [["/fedwatch", "Fed Watch"], ["/ecb-watch", "ECB Watch"], ["/boj-watch", "BOJ Watch"], ["/boe-watch", "BOE Watch"]] as const;
+  const pairs = [["/dxy-vs-exy", "DXY vs EXY"], ["/dxy-vs-bxy", "DXY vs BXY"], ["/dxy-vs-jxy", "DXY vs JXY"]] as const;
   const activeBank = banks.find(([to]) => to === pathname);
   const activePair = pairs.find(([to]) => to === pathname);
   return (
