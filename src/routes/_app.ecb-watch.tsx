@@ -101,7 +101,7 @@ function EcbWatchPage() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="ledger-app max-h-[90dvh] overflow-y-auto">
           <DialogHeader><DialogTitle>Log ECB probabilities</DialogTitle></DialogHeader>
           <form onSubmit={save} className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

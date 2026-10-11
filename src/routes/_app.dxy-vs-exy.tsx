@@ -144,7 +144,7 @@ function DxyExyPage() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="ledger-app max-h-[90dvh] overflow-y-auto">
           <DialogHeader><DialogTitle>Log daily close</DialogTitle></DialogHeader>
           <form onSubmit={save} className="space-y-4">
             <div className="space-y-2"><Label htmlFor="d">Date</Label><Input id="d" type="date" required value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>

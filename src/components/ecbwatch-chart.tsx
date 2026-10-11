@@ -13,10 +13,10 @@ export function EcbWatchChart({ entries, dollarCloses }: { entries: EcbEntry[]; 
 
   return (
     <section aria-label="Probability trend" className="border-y border-border py-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-6 grid min-w-0 grid-cols-1 items-center gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
         <h2 className="text-lg font-semibold">Probability trend</h2>
         <Select value={overlay} onValueChange={setOverlay}>
-          <SelectTrigger aria-label="Chart overlay" className="w-52"><SelectValue /></SelectTrigger>
+          <SelectTrigger aria-label="Chart overlay" className="w-full sm:w-64"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">No overlay</SelectItem>
             <SelectItem value="exy">Overlay EXY</SelectItem>

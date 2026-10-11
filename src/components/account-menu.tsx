@@ -69,7 +69,7 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
     <Button variant={iconOnly ? "secondary" : "ghost"} aria-label={user ? "My account" : "Sign in"} title={user ? "My account" : "Sign in"} className={iconOnly ? "h-10 w-10 shrink-0 rounded-full p-0 text-muted-foreground [&_svg]:size-5 sm:h-11 sm:w-11" : "ml-auto shrink-0"} disabled={!ready} onClick={() => setOpen(true)}>
       {iconOnly || user ? <UserRound /> : <LogIn />}{!iconOnly && <span className="hidden sm:inline">{user ? "My account" : "Sign in"}</span>}
     </Button>
-    <Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogHeader><DialogTitle>{user ? "My account" : "Sign in to Macro Ledger"}</DialogTitle></DialogHeader>
+    <Dialog open={open} onOpenChange={setOpen}><DialogContent className={iconOnly ? "ledger-app" : undefined}><DialogHeader><DialogTitle>{user ? "My account" : "Sign in to Macro Ledger"}</DialogTitle></DialogHeader>
       {user ? <div className="space-y-5">
         <p className="break-all text-sm text-muted-foreground">{user.email}</p>
         {profile.error && <p role="alert" className="text-sm text-negative">Could not load your profile.</p>}
