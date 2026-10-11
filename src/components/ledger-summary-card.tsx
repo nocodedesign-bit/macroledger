@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export function LedgerSummaryCard({ label, value, change, detail }: { label: ReactNode; value: string; change?: string; detail?: string }) {
+export function LedgerSummaryCard({ label, value, change, detail }: { label: ReactNode; value: string; change?: string | undefined; detail?: string | undefined }) {
   const positive = change?.startsWith("+");
   return (
     <div className="ledger-summary min-w-0 border border-border bg-card">
