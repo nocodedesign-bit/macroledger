@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppBoeWatchRouteImport } from './routes/_app.boe-watch'
 import { Route as AppBojWatchRouteImport } from './routes/_app.boj-watch'
+import { Route as AppDxyVsBxyRouteImport } from './routes/_app.dxy-vs-bxy'
 import { Route as AppDxyVsExyRouteImport } from './routes/_app.dxy-vs-exy'
+import { Route as AppDxyVsJxyRouteImport } from './routes/_app.dxy-vs-jxy'
 import { Route as AppEcbWatchRouteImport } from './routes/_app.ecb-watch'
 import { Route as AppFedwatchRouteImport } from './routes/_app.fedwatch'
 
@@ -36,9 +38,19 @@ const AppBojWatchRoute = AppBojWatchRouteImport.update({
   path: '/boj-watch',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDxyVsBxyRoute = AppDxyVsBxyRouteImport.update({
+  id: '/dxy-vs-bxy',
+  path: '/dxy-vs-bxy',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDxyVsExyRoute = AppDxyVsExyRouteImport.update({
   id: '/dxy-vs-exy',
   path: '/dxy-vs-exy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDxyVsJxyRoute = AppDxyVsJxyRouteImport.update({
+  id: '/dxy-vs-jxy',
+  path: '/dxy-vs-jxy',
   getParentRoute: () => AppRoute,
 } as any)
 const AppEcbWatchRoute = AppEcbWatchRouteImport.update({
@@ -56,7 +68,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/boe-watch': typeof AppBoeWatchRoute
   '/boj-watch': typeof AppBojWatchRoute
+  '/dxy-vs-bxy': typeof AppDxyVsBxyRoute
   '/dxy-vs-exy': typeof AppDxyVsExyRoute
+  '/dxy-vs-jxy': typeof AppDxyVsJxyRoute
   '/ecb-watch': typeof AppEcbWatchRoute
   '/fedwatch': typeof AppFedwatchRoute
 }
@@ -64,7 +78,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/boe-watch': typeof AppBoeWatchRoute
   '/boj-watch': typeof AppBojWatchRoute
+  '/dxy-vs-bxy': typeof AppDxyVsBxyRoute
   '/dxy-vs-exy': typeof AppDxyVsExyRoute
+  '/dxy-vs-jxy': typeof AppDxyVsJxyRoute
   '/ecb-watch': typeof AppEcbWatchRoute
   '/fedwatch': typeof AppFedwatchRoute
 }
@@ -74,7 +90,9 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/boe-watch': typeof AppBoeWatchRoute
   '/_app/boj-watch': typeof AppBojWatchRoute
+  '/_app/dxy-vs-bxy': typeof AppDxyVsBxyRoute
   '/_app/dxy-vs-exy': typeof AppDxyVsExyRoute
+  '/_app/dxy-vs-jxy': typeof AppDxyVsJxyRoute
   '/_app/ecb-watch': typeof AppEcbWatchRoute
   '/_app/fedwatch': typeof AppFedwatchRoute
 }
@@ -84,7 +102,9 @@ export interface FileRouteTypes {
     | '/'
     | '/boe-watch'
     | '/boj-watch'
+    | '/dxy-vs-bxy'
     | '/dxy-vs-exy'
+    | '/dxy-vs-jxy'
     | '/ecb-watch'
     | '/fedwatch'
   fileRoutesByTo: FileRoutesByTo
@@ -92,7 +112,9 @@ export interface FileRouteTypes {
     | '/'
     | '/boe-watch'
     | '/boj-watch'
+    | '/dxy-vs-bxy'
     | '/dxy-vs-exy'
+    | '/dxy-vs-jxy'
     | '/ecb-watch'
     | '/fedwatch'
   id:
@@ -101,7 +123,9 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_app/boe-watch'
     | '/_app/boj-watch'
+    | '/_app/dxy-vs-bxy'
     | '/_app/dxy-vs-exy'
+    | '/_app/dxy-vs-jxy'
     | '/_app/ecb-watch'
     | '/_app/fedwatch'
   fileRoutesById: FileRoutesById
@@ -141,11 +165,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBojWatchRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/dxy-vs-bxy': {
+      id: '/_app/dxy-vs-bxy'
+      path: '/dxy-vs-bxy'
+      fullPath: '/dxy-vs-bxy'
+      preLoaderRoute: typeof AppDxyVsBxyRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dxy-vs-exy': {
       id: '/_app/dxy-vs-exy'
       path: '/dxy-vs-exy'
       fullPath: '/dxy-vs-exy'
       preLoaderRoute: typeof AppDxyVsExyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dxy-vs-jxy': {
+      id: '/_app/dxy-vs-jxy'
+      path: '/dxy-vs-jxy'
+      fullPath: '/dxy-vs-jxy'
+      preLoaderRoute: typeof AppDxyVsJxyRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ecb-watch': {
@@ -168,7 +206,9 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBoeWatchRoute: typeof AppBoeWatchRoute
   AppBojWatchRoute: typeof AppBojWatchRoute
+  AppDxyVsBxyRoute: typeof AppDxyVsBxyRoute
   AppDxyVsExyRoute: typeof AppDxyVsExyRoute
+  AppDxyVsJxyRoute: typeof AppDxyVsJxyRoute
   AppEcbWatchRoute: typeof AppEcbWatchRoute
   AppFedwatchRoute: typeof AppFedwatchRoute
 }
@@ -176,7 +216,9 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppBoeWatchRoute: AppBoeWatchRoute,
   AppBojWatchRoute: AppBojWatchRoute,
+  AppDxyVsBxyRoute: AppDxyVsBxyRoute,
   AppDxyVsExyRoute: AppDxyVsExyRoute,
+  AppDxyVsJxyRoute: AppDxyVsJxyRoute,
   AppEcbWatchRoute: AppEcbWatchRoute,
   AppFedwatchRoute: AppFedwatchRoute,
 }
