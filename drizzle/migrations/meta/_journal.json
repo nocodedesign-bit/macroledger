@@ -22,6 +22,13 @@
       "when": 1791590790108,
       "tag": "0002_allow_ecbwatch_ledger",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791677184000,
+      "tag": "0003_expand_bank_and_currency_ledgers",
+      "breakpoints": true
     }
   ]
 }

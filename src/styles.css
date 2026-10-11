@@ -156,7 +156,7 @@
 
 /* Ledger-only palette preserves the public homepage's existing identity. */
 .ledger-app {
-  --background: oklch(0.177 0.014 258);
+  --background: oklch(0.208 0.042 265.755);
   --foreground: oklch(0.975 0.003 258);
   --card: oklch(0.232 0.016 258);
   --card-foreground: var(--foreground);

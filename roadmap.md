@@ -4,3 +4,6 @@
 - [ ] Verify authenticated save/read/edit/delete — blocked until the first user signs in with Google; no account exists to test.
 - [x] Match all three ledger pages to the dark-and-gold reference.
 - [x] Check tab navigation and layouts on mobile and desktop.
+- [ ] Replace tabs with two compact navigation dropdowns.
+- [ ] Implement BOJ/BOE watches and BXY/JXY correlation ledgers with private storage.
+- [ ] Verify menu navigation, new forms, and mobile layouts.

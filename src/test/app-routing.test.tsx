@@ -14,4 +14,8 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+  it.each(["fedwatch", "ecb-watch", "boj-watch", "boe-watch", "dxy-vs-exy", "dxy-vs-bxy", "dxy-vs-jxy"])("matches the %s ledger", (path) => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes(`/${path}`).at(-1)?.routeId).toBe(`/_app/${path}`);
+  });
 });
