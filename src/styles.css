@@ -153,3 +153,46 @@
     font-family: var(--font-sans);
   }
 }
+
+/* Ledger-only palette preserves the public homepage's existing identity. */
+.ledger-app {
+  --background: oklch(0.177 0.014 258);
+  --foreground: oklch(0.975 0.003 258);
+  --card: oklch(0.232 0.016 258);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.838 0.166 86);
+  --primary-foreground: oklch(0.14 0.008 258);
+  --secondary: oklch(0.302 0.029 258);
+  --muted: var(--card);
+  --muted-foreground: oklch(0.691 0.014 258);
+  --accent: var(--secondary);
+  --border: oklch(0.322 0.024 258);
+  --input: var(--border);
+  --ring: var(--primary);
+  --positive: oklch(0.735 0.129 170);
+  --negative: oklch(0.706 0.167 12);
+  letter-spacing: 0;
+}
+
+.ledger-summary {
+  border-radius: 16px;
+  padding: 24px;
+  min-height: 116px;
+}
+
+.ledger-value { font-size: 32px; line-height: 1.15; }
+.ledger-log { border-radius: 12px; transition: background-color 160ms ease, box-shadow 160ms ease; }
+.ledger-log:disabled { opacity: 1; }
+.ledger-log:not(:disabled):hover { box-shadow: 0 4px 18px color-mix(in oklch, var(--primary) 20%, transparent); }
+
+@media (min-width: 640px) {
+  .ledger-summary { padding: 28px 24px; min-height: 152px; }
+  .ledger-value { font-size: 36px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-page { animation: ledger-enter 180ms ease-out; }
+  @keyframes ledger-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+}
