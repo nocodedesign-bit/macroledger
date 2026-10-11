@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppBoeWatchRouteImport } from './routes/_app.boe-watch'
+import { Route as AppBojWatchRouteImport } from './routes/_app.boj-watch'
 import { Route as AppDxyVsExyRouteImport } from './routes/_app.dxy-vs-exy'
 import { Route as AppEcbWatchRouteImport } from './routes/_app.ecb-watch'
 import { Route as AppFedwatchRouteImport } from './routes/_app.fedwatch'
@@ -23,6 +25,16 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppBoeWatchRoute = AppBoeWatchRouteImport.update({
+  id: '/boe-watch',
+  path: '/boe-watch',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBojWatchRoute = AppBojWatchRouteImport.update({
+  id: '/boj-watch',
+  path: '/boj-watch',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppDxyVsExyRoute = AppDxyVsExyRouteImport.update({
   id: '/dxy-vs-exy',
@@ -42,12 +54,16 @@ const AppFedwatchRoute = AppFedwatchRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/boe-watch': typeof AppBoeWatchRoute
+  '/boj-watch': typeof AppBojWatchRoute
   '/dxy-vs-exy': typeof AppDxyVsExyRoute
   '/ecb-watch': typeof AppEcbWatchRoute
   '/fedwatch': typeof AppFedwatchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/boe-watch': typeof AppBoeWatchRoute
+  '/boj-watch': typeof AppBojWatchRoute
   '/dxy-vs-exy': typeof AppDxyVsExyRoute
   '/ecb-watch': typeof AppEcbWatchRoute
   '/fedwatch': typeof AppFedwatchRoute
@@ -56,19 +72,35 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/_app/boe-watch': typeof AppBoeWatchRoute
+  '/_app/boj-watch': typeof AppBojWatchRoute
   '/_app/dxy-vs-exy': typeof AppDxyVsExyRoute
   '/_app/ecb-watch': typeof AppEcbWatchRoute
   '/_app/fedwatch': typeof AppFedwatchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dxy-vs-exy' | '/ecb-watch' | '/fedwatch'
+  fullPaths:
+    | '/'
+    | '/boe-watch'
+    | '/boj-watch'
+    | '/dxy-vs-exy'
+    | '/ecb-watch'
+    | '/fedwatch'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dxy-vs-exy' | '/ecb-watch' | '/fedwatch'
+  to:
+    | '/'
+    | '/boe-watch'
+    | '/boj-watch'
+    | '/dxy-vs-exy'
+    | '/ecb-watch'
+    | '/fedwatch'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/_app/boe-watch'
+    | '/_app/boj-watch'
     | '/_app/dxy-vs-exy'
     | '/_app/ecb-watch'
     | '/_app/fedwatch'
@@ -95,6 +127,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/boe-watch': {
+      id: '/_app/boe-watch'
+      path: '/boe-watch'
+      fullPath: '/boe-watch'
+      preLoaderRoute: typeof AppBoeWatchRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/boj-watch': {
+      id: '/_app/boj-watch'
+      path: '/boj-watch'
+      fullPath: '/boj-watch'
+      preLoaderRoute: typeof AppBojWatchRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dxy-vs-exy': {
       id: '/_app/dxy-vs-exy'
       path: '/dxy-vs-exy'
@@ -120,12 +166,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppBoeWatchRoute: typeof AppBoeWatchRoute
+  AppBojWatchRoute: typeof AppBojWatchRoute
   AppDxyVsExyRoute: typeof AppDxyVsExyRoute
   AppEcbWatchRoute: typeof AppEcbWatchRoute
   AppFedwatchRoute: typeof AppFedwatchRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBoeWatchRoute: AppBoeWatchRoute,
+  AppBojWatchRoute: AppBojWatchRoute,
   AppDxyVsExyRoute: AppDxyVsExyRoute,
   AppEcbWatchRoute: AppEcbWatchRoute,
   AppFedwatchRoute: AppFedwatchRoute,
