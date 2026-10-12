@@ -27,7 +27,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     });
     void supabase.auth.getUser().then(({ data }) => { if (active && revision === initial) { setUser(data.user); setReady(true); } }).catch(() => { if (active) setReady(true); });
     return () => { active = false; subscription.unsubscribe(); };
-  }, [queryClient, router]);
+  }, [queryClient, router, navigate]);
   return <AccountContext.Provider value={{ user, ready }}>{children}</AccountContext.Provider>;
 }
 
