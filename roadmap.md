@@ -7,4 +7,4 @@
 - [x] Replace tabs with two compact navigation dropdowns.
 - [x] Implement BOJ/BOE watches and BXY/JXY correlation ledgers with private storage.
 - [x] Verify menu navigation, signed-in new forms, and mobile layouts at 320/360/1280 pixels; 11 tests passed.
-- [ ] Replace marketing homepage with Google auth card and verify signed-in redirect.
+- [x] Replace marketing homepage with Google auth card; signed-out layouts and signed-in redirect to Fed Watch verified. External Google consent was not automated.
