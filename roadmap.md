@@ -1,9 +1,9 @@
 - [x] Enable Google sign-in and private profile storage.
 - [x] Move manual ledgers to private online storage and preserve browser entries through explicit account import.
 - [x] Verify the login dialog, signed-out privacy, page test, and database security checks.
-- [ ] Verify authenticated save/read/edit/delete — blocked until the first user signs in with Google; no account exists to test.
+- [ ] Finish authenticated new-record/edit/delete checks — signed-in save/read verified using an existing unchanged manual EXY record; remaining checks need user-supplied BOJ/BOE/BXY/JXY market inputs rather than invented data.
 - [x] Match all three ledger pages to the dark-and-gold reference.
 - [x] Check tab navigation and layouts on mobile and desktop.
-- [ ] Replace tabs with two compact navigation dropdowns.
-- [ ] Implement BOJ/BOE watches and BXY/JXY correlation ledgers with private storage.
-- [ ] Verify menu navigation, new forms, and mobile layouts.
+- [x] Replace tabs with two compact navigation dropdowns.
+- [x] Implement BOJ/BOE watches and BXY/JXY correlation ledgers with private storage.
+- [x] Verify menu navigation, signed-in new forms, and mobile layouts at 320/360/1280 pixels; 11 tests passed.
