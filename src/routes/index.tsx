@@ -1,116 +1,64 @@
-import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { BarChart3, LineChart, NotebookPen, Rocket, UserPlus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AccountMenu } from "@/components/account-menu";
-import { RegisterDialog } from "@/components/register-dialog";
+import { GoogleMark } from "@/components/google-mark";
 import { useAccount } from "@/hooks/use-account";
+import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Macro Ledger — FedWatch Tracker & Macro Tools" },
-      { name: "description", content: "Manual daily ledgers for FedWatch rate probabilities, DXY vs EXY correlations, and macro tools." },
-      { property: "og:title", content: "Macro Ledger — FedWatch Tracker & Macro Tools" },
-      { property: "og:description", content: "Manual daily ledgers for FedWatch rate probabilities, DXY vs EXY correlations, and macro tools." },
+      { title: "Sign in — Macro Ledger" },
+      { name: "description", content: "Sign in with Google to access your private daily macro ledgers and market rate trackers." },
+      { property: "og:title", content: "Sign in — Macro Ledger" },
+      { property: "og:description", content: "Sign in with Google to access your private daily macro ledgers and market rate trackers." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: LandingPage,
+  component: AuthPage,
 });
 
-const features = [
-  {
-    icon: BarChart3,
-    title: "FedWatch Probability Tracking",
-    desc: "Log daily CUT · HOLD · HIKE odds for the next FOMC meeting and watch the trend chart evolve.",
-  },
-  {
-    icon: LineChart,
-    title: "Macro Correlations",
-    desc: "Overlay DXY and US02Y on your probabilities and measure the inverse DXY vs EXY relationship.",
-  },
-  {
-    icon: NotebookPen,
-    title: "Daily Manual Ledger",
-    desc: "Every record is entered by hand and saved privately to your account — no mock data, ever.",
-  },
-];
-
-function LandingPage() {
-  const { user } = useAccount();
-  const [registerOpen, setRegisterOpen] = useState(false);
+function AuthPage() {
+  const { user, ready } = useAccount();
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    if (ready && user) void navigate({ to: "/fedwatch", replace: true });
+  }, [ready, user, navigate]);
+  const signIn = async () => {
+    setBusy(true);
+    setError("");
+    try {
+      // Cloud's managed Google flow sets the session; return to this public page
+      // before the shared account provider redirects into the app.
+      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+    } catch {
+      setError("Google sign-in could not be completed. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4">
-          <span className="font-mono text-sm font-semibold tracking-widest">
-            <span className="text-primary">MACRO</span> <span className="text-foreground">LEDGER</span>
-          </span>
-          <div className="flex items-center gap-2">
-            {user ? (
-              <Button asChild className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]">
-                <Link to="/fedwatch">Enter the App</Link>
-              </Button>
-            ) : (
-              <Button className="font-semibold shadow-lg shadow-primary/20 transition-transform hover:scale-[1.03]" onClick={() => setRegisterOpen(true)}>
-                <UserPlus /> Register
-              </Button>
-            )}
-            <AccountMenu />
-          </div>
+    <div className="auth-page min-h-dvh bg-background text-foreground">
+      <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center justify-center gap-8 px-5 py-10 sm:px-6">
+        <div aria-label="Macro Ledger" className="text-2xl font-semibold">
+          <span className="text-primary">MACRO</span><span className="font-medium text-foreground"> LEDGER</span>
         </div>
-      </header>
-
-      <main className="flex-1">
-        <section className="relative overflow-hidden">
-          <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-          <div className="relative mx-auto max-w-3xl px-4 pb-16 pt-20 text-center sm:pt-28">
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">FedWatch Tracker · DXY vs EXY</p>
-            <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl">
-              Welcome to the Macro Analysis Platform
-              <span className="mt-2 block text-primary">FedWatch Tracker</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Log the daily odds for the next Federal Reserve decision — cut, hold or hike — and track the inverse
-              relationship between the US Dollar Index (DXY) and the Euro Index (EXY), all kept in manual daily ledgers
-              stored privately in your account.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              {user ? (
-                <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105">
-                  <Link to="/fedwatch">Enter the App <Rocket /></Link>
-                </Button>
-              ) : (
-                <Button size="lg" className="h-14 px-8 text-lg font-semibold shadow-xl shadow-primary/25 transition-transform hover:scale-105" onClick={() => setRegisterOpen(true)}>
-                  Register <UserPlus />
-                </Button>
-              )}
-            </div>
-            <p className="mt-6 text-xs text-muted-foreground">CUT · HOLD · HIKE — updated by hand, every trading day.</p>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-6xl px-4 pb-20">
-          <div className="grid gap-4 md:grid-cols-3">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/40">
-                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h2 className="mt-4 text-lg font-semibold">{title}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-              </div>
-            ))}
-          </div>
+        <section aria-label="Sign in to Macro Ledger" className="w-full min-w-0 rounded-2xl border border-border bg-card px-6 py-9 text-center sm:px-9 sm:py-10">
+          <h1 className="text-2xl font-bold leading-snug">Welcome to Macro Ledger</h1>
+          <p className="mt-4 text-sm leading-6 text-muted-foreground">Sign in with Google to access your private daily macro ledgers and market rate trackers.</p>
+          <Button variant="google" className="mt-8 h-12 w-full gap-3 text-sm font-semibold [&_svg]:size-5" disabled={!ready || busy || !!user} onClick={signIn}>
+            {busy || !ready || user ? <LoaderCircle className="motion-safe:animate-spin" /> : <GoogleMark />}
+            {busy ? "Connecting to Google…" : user ? "Opening your ledgers…" : "Continue with Google"}
+          </Button>
+          {error && <p role="alert" className="mt-4 text-sm text-negative">{error}</p>}
         </section>
       </main>
-
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        © 2026 Macro Ledger. All rights reserved.
-      </footer>
-      <RegisterDialog open={registerOpen} onOpenChange={setRegisterOpen} />
     </div>
   );
 }

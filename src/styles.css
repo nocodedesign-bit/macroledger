@@ -50,6 +50,9 @@
   --color-negative: var(--negative);
   --color-dxy: var(--dxy);
   --color-exy: var(--exy);
+  --color-auth-action: var(--auth-action);
+  --color-auth-action-foreground: var(--auth-action-foreground);
+  --color-auth-action-hover: var(--auth-action-hover);
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --color-chart-1: var(--chart-1);
@@ -155,6 +158,23 @@
 }
 
 /* Ledger-only palette preserves the public homepage's existing identity. */
+.auth-page {
+  --background: oklch(0.166 0.026 269);
+  --card: oklch(0.221 0.029 269);
+  --border: oklch(0.29 0.039 266);
+  --foreground: oklch(1 0 0);
+  --muted-foreground: oklch(0.686 0.033 260);
+  --primary: oklch(0.838 0.166 86);
+  --ring: var(--primary);
+  --auth-action: oklch(1 0 0);
+  --auth-action-foreground: oklch(0.17 0.008 260);
+  --auth-action-hover: oklch(0.96 0.004 260);
+  --google-blue: oklch(0.63 0.18 260);
+  --google-red: oklch(0.60 0.20 28);
+  --google-yellow: oklch(0.81 0.17 85);
+  --google-green: oklch(0.61 0.16 151);
+}
+
 .ledger-app {
   --background: oklch(0.208 0.042 265.755);
   --foreground: oklch(0.975 0.003 258);

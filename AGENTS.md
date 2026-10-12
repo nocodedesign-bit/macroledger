@@ -17,3 +17,4 @@
 - Use shared configurable BOJ/BOE probability pages and currency comparison pages with separate ledger keys; this avoids divergent forms while preserving existing Fed/ECB record shapes.
 - Keep supported browser-import keys and required fields in the shared ledger catalog; this prevents currency records from being validated as probabilities.
 - Use route-derived dual dropdown navigation for bank watches and currency pairs; this keeps direct links and mobile menu labels synchronized.
+- The public homepage is the Google auth entry and uses the root account provider to redirect signed-in users to Fed Watch; managed OAuth returns to the public origin to avoid session timing redirects and duplicate auth listeners.
