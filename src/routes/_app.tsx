@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Outlet, Link, createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
 import { AccountMenu } from "@/components/account-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAccount } from "@/hooks/use-account";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,

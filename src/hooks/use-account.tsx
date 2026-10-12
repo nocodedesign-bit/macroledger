@@ -11,6 +11,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
+  const navigate = useNavigate();
   useEffect(() => {
     let active = true;
     let revision = 0;
