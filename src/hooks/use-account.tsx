@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -11,6 +11,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
+  const navigate = useNavigate();
   useEffect(() => {
     let active = true;
     let revision = 0;
@@ -20,13 +21,13 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       revision += 1;
       setUser(session?.user ?? null);
       setReady(true);
-      if (event === "SIGNED_OUT") queryClient.clear();
+      if (event === "SIGNED_OUT") { queryClient.clear(); void navigate({ to: "/", replace: true }); }
       else void queryClient.invalidateQueries();
       void router.invalidate();
     });
     void supabase.auth.getUser().then(({ data }) => { if (active && revision === initial) { setUser(data.user); setReady(true); } }).catch(() => { if (active) setReady(true); });
     return () => { active = false; subscription.unsubscribe(); };
-  }, [queryClient, router]);
+  }, [queryClient, router, navigate]);
   return <AccountContext.Provider value={{ user, ready }}>{children}</AccountContext.Provider>;
 }
 

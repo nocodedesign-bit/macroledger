@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Outlet, Link, createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
 import { AccountMenu } from "@/components/account-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAccount } from "@/hooks/use-account";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -9,6 +11,8 @@ export const Route = createFileRoute("/_app")({
 function AppLayout() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const { user, ready } = useAccount();
+  useEffect(() => { if (ready && !user) void navigate({ to: "/", replace: true }); }, [ready, user, navigate]);
   const banks = [["/fedwatch", "Fed Watch"], ["/ecb-watch", "ECB Watch"], ["/boj-watch", "BOJ Watch"], ["/boe-watch", "BOE Watch"]] as const;
   const pairs = [["/dxy-vs-exy", "DXY vs EXY"], ["/dxy-vs-bxy", "DXY vs BXY"], ["/dxy-vs-jxy", "DXY vs JXY"]] as const;
   const activeBank = banks.find(([to]) => to === pathname);

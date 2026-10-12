@@ -78,7 +78,7 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
           <Label htmlFor="profile-name">Display name</Label><Input id="profile-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} /><Button disabled={busy || profile.isPending}>Save profile</Button>
         </form>
         {localCount > 0 && <div className="space-y-3 border-t border-border pt-4"><p className="text-sm text-muted-foreground">{localCount} entries are saved in this browser. Import them into this account without replacing online entries.</p><Button variant="outline" disabled={busy} onClick={importEntries}><Upload />Import browser entries</Button></div>}
-        <Button variant="outline" disabled={busy} onClick={async () => { await queryClient.cancelQueries(); queryClient.clear(); const { error } = await supabase.auth.signOut(); if (error) toast.error("Could not sign out"); else setOpen(false); }}><LogOut />Sign out</Button>
+        <Button variant="outline" disabled={busy} onClick={async () => { setBusy(true); await queryClient.cancelQueries(); queryClient.clear(); const { error } = await supabase.auth.signOut(); setBusy(false); if (error) toast.error("Could not sign out"); else { setOpen(false); toast.success("Signed out"); } }}><LogOut />Sign out</Button>
       </div> : <div className="space-y-5"><p className="text-sm text-muted-foreground">Your market entries and profile are private to your account.</p><Button className="w-full" disabled={busy} onClick={signIn}>{busy ? <LoaderCircle className="animate-spin" /> : <LogIn />}Continue with Google</Button></div>}
     </DialogContent></Dialog>
   </>;
