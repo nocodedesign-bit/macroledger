@@ -20,7 +20,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       revision += 1;
       setUser(session?.user ?? null);
       setReady(true);
-      if (event === "SIGNED_OUT") queryClient.clear();
+      if (event === "SIGNED_OUT") { queryClient.clear(); void navigate({ to: "/", replace: true }); }
       else void queryClient.invalidateQueries();
       void router.invalidate();
     });
