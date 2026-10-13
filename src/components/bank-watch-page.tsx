@@ -9,7 +9,8 @@ import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { BankWatchChart, type BankEntry } from "@/components/bank-watch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
 import { useAccount } from "@/hooks/use-account";
-import { LedgerSummaryCard } from "@/components/ledger-summary-card";
+import { ProbabilityCard } from "@/components/probability-card";
+import { EntryDateControls } from "@/components/entry-date-controls";
 
 export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger, yieldName }: {
   bank: string; ledgerKey: string; indexName: string; indexKey: "bxy" | "jxy"; pairLedger: string; yieldName: string;
@@ -21,8 +22,12 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ date: todayISO(), meeting: "", cut: "", hold: "", hike: "", indexClose: "", bondYield: "" });
   const indexCloses = dollarCloses.flatMap((entry) => { const value = entry[indexKey]; return value === undefined ? [] : [{ date: entry.date, indexClose: value }]; });
+  const [entryDate, setEntryDate] = useState("");
   const latest = entries[entries.length - 1];
-  const prev = entries[entries.length - 2];
+  const shown = entryDate ? entries.filter((x) => x.date <= entryDate) : entries;
+  const current = shown[shown.length - 1];
+  const prev = shown[shown.length - 2];
+  const top = current ? (["cut", "hold", "hike"] as const).reduce((a, b) => (current[b] > current[a] ? b : a)) : null;
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,16 +56,16 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
         </Button>
       </div>
 
+      <EntryDateControls value={entryDate} onChange={setEntryDate} updated={latest?.date} />
+      {entryDate && current && current.date !== entryDate && <p className="text-xs text-muted-foreground">No entry on that date — showing {current.date}.</p>}
+
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your entries. Please refresh to retry.</p>}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {(["cut", "hold", "hike"] as const).map((k) => {
-          const d = latest && prev ? latest[k] - prev[k] : null;
-          return (
-            <LedgerSummaryCard key={k} label={k} value={latest ? `${latest[k].toFixed(1)}%` : "—"} change={d === null ? undefined : `${d >= 0 ? "+" : ""}${d.toFixed(1)} pts 1D`} />
-          );
-        })}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+        {(["cut", "hold", "hike"] as const).map((k) => (
+          <ProbabilityCard key={k} kind={k} value={current?.[k]} change={current && prev ? current[k] - prev[k] : null} dominant={top === k} />
+        ))}
       </div>
 
       <BankWatchChart entries={entries} dollarCloses={indexCloses} indexName={indexName} yieldName={yieldName} />

@@ -50,6 +50,7 @@
   --color-negative: var(--negative);
   --color-dxy: var(--dxy);
   --color-exy: var(--exy);
+  --color-dominant: var(--dominant);
   --color-auth-action: var(--auth-action);
   --color-auth-action-foreground: var(--auth-action-foreground);
   --color-auth-action-hover: var(--auth-action-hover);
@@ -193,6 +194,7 @@
   --ring: var(--primary);
   --positive: oklch(0.735 0.129 170);
   --negative: oklch(0.706 0.167 12);
+  --dominant: oklch(0.78 0.13 200);
   letter-spacing: 0;
 }
 
