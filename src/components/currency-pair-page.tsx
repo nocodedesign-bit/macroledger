@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { useAccount } from "@/hooks/use-account";
+import { EntryDateControls } from "@/components/entry-date-controls";
 import { LedgerSummaryCard } from "@/components/ledger-summary-card";
 
 type Entry = { date: string; dxy: number; exy: number };
@@ -23,7 +24,9 @@ function correlation(xs: number[], ys: number[]) {
 
 export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: "exy" | "bxy" | "jxy"; indexName: string; indexLabel: string }) {
   const { entries: rawEntries, upsert: saveRawEntry, remove, error } = useLedger<{ date: string; dxy: number; exy?: number; bxy?: number; jxy?: number }>(`ledger:dxy-${pairKey}`);
-  const entries: Entry[] = rawEntries.flatMap((entry) => { const value = entry[pairKey]; return value === undefined ? [] : [{ date: entry.date, dxy: entry.dxy, exy: value }]; });
+  const [entryDate, setEntryDate] = useState("");
+  const allEntries: Entry[] = rawEntries.flatMap((entry) => { const value = entry[pairKey]; return value === undefined ? [] : [{ date: entry.date, dxy: entry.dxy, exy: value }]; });
+  const entries = entryDate ? allEntries.filter((x) => x.date <= entryDate) : allEntries;
   const { user } = useAccount();
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
@@ -68,6 +71,8 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
           <Plus /> Log today
         </Button>
       </div>
+
+      <EntryDateControls value={entryDate} onChange={setEntryDate} updated={allEntries[allEntries.length - 1]?.date} />
 
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your closes. Please refresh to retry.</p>}
@@ -138,7 +143,7 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
               <div className="space-y-2"><Label htmlFor="dxy">DXY daily close</Label><Input id="dxy" type="number" step="any" required placeholder="e.g. 103.250" value={form.dxy} onChange={(e) => setForm({ ...form, dxy: e.target.value })} /></div>
               <div className="space-y-2"><Label htmlFor="exy">{indexName} daily close</Label><Input id="exy" type="number" step="any" required placeholder="e.g. 108.400" value={form.exy} onChange={(e) => setForm({ ...form, exy: e.target.value })} /></div>
             </div>
-            {entries.some((x) => x.date === form.date) && <p className="text-xs text-muted-foreground">An entry for this date exists and will be replaced.</p>}
+            {allEntries.some((x) => x.date === form.date) && <p className="text-xs text-muted-foreground">An entry for this date exists and will be replaced.</p>}
             <DialogFooter><Button type="submit" disabled={saving}>{saving ? "Saving…" : "Save close"}</Button></DialogFooter>
           </form>
         </DialogContent>
