@@ -19,3 +19,4 @@
 - Use route-derived dual dropdown navigation for bank watches and currency pairs; this keeps direct links and mobile menu labels synchronized.
 - The public homepage is the Google auth entry and uses the root account provider to redirect signed-in users to Fed Watch; managed OAuth returns to the public origin to avoid session timing redirects and duplicate auth listeners.
 - Let the root account provider own sign-out: it clears the cache and replaces the history entry with the login page, and the app layout sends signed-out visitors there too, so no page needs its own sign-out redirect and the back button cannot restore a ledger view.
+- AI shift explainer uses createServerFn (owner-scoped reads via requireSupabaseAuth) with gateway helpers in a .server.ts module; keeps the API key and prompts server-side.
