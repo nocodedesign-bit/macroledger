@@ -24,8 +24,8 @@ export const explainLedger = createServerFn({ method: "POST" })
     const rows = (bank.data ?? []).map((r) => {
       const d = r.data as Record<string, number | string | undefined>;
       const c = closes.get(r.record_date);
-      const idx = (cfg.index === "dxy" ? d.dxy : d.indexClose) ?? c?.[cfg.index];
-      return [r.record_date, d.meeting ?? d.fomcMeeting ?? "", d.cut, d.hold, d.hike, idx ?? "", d[cfg.yieldKey] ?? ""].join(",");
+      const idx = (cfg.index === "dxy" ? d["dxy"] : d["indexClose"]) ?? c?.[cfg.index];
+      return [r.record_date, d["meeting"] ?? d["fomcMeeting"] ?? "", d["cut"], d["hold"], d["hike"], idx ?? "", d[cfg.yieldKey] ?? ""].join(",");
     });
     if (rows.length < 2) return { text: null as string | null, count: rows.length };
     const prompt = `You are a macro analyst. Below are a user's manually logged ${cfg.bank} next-meeting rate probabilities (percent) with same-day ${cfg.indexName} closes and ${cfg.yieldName} yields, ${data.from} to ${data.to}. Blank means not logged — never invent values.
