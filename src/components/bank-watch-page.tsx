@@ -10,6 +10,7 @@ import { BankWatchChart, type BankEntry } from "@/components/bank-watch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
 import { useAccount } from "@/hooks/use-account";
 import { ProbabilityCard } from "@/components/probability-card";
+import { LedgerInsights } from "@/components/ledger-insights";
 import { EntryDateControls } from "@/components/entry-date-controls";
 
 export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger, yieldName }: {
@@ -69,6 +70,8 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
       </div>
 
       <BankWatchChart entries={entries} dollarCloses={indexCloses} indexName={indexName} yieldName={yieldName} />
+
+      {user && <LedgerInsights defaultKey={ledgerKey} />}
 
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
