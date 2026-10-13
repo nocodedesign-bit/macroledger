@@ -11,6 +11,7 @@ import { EcbWatchChart, type EcbEntry } from "@/components/ecbwatch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
 import { useAccount } from "@/hooks/use-account";
 import { LedgerSummaryCard } from "@/components/ledger-summary-card";
+import { LedgerInsights } from "@/components/ledger-insights";
 
 export const Route = createFileRoute("/_app/ecb-watch")({
   head: () => ({
@@ -77,6 +78,7 @@ function EcbWatchPage() {
 
       <EcbWatchChart entries={entries} dollarCloses={dollarCloses} />
 
+      {user && <LedgerInsights defaultKey="ledger:ecbwatch" />}
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted text-left text-xs uppercase tracking-widest text-muted-foreground">
