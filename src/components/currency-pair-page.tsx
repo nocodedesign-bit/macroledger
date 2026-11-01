@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, DollarSign, Globe2, Activity } from "lucide-react";
 import { toast } from "sonner";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,10 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
     const pct = latest && prev ? (latest[key] / prev[key] - 1) * 100 : null;
     return (
       <LedgerSummaryCard
-        label={<span className="flex min-w-0 items-center gap-2"><span className={`h-2 w-2 shrink-0 rounded-full ${key === "dxy" ? "bg-dxy" : "bg-exy"}`} />{name}<span className="truncate text-xs normal-case">{sub}</span></span>}
+        label={name}
+        subtitle={sub}
+        icon={key === "dxy" ? <DollarSign className="size-4" /> : <Globe2 className="size-4" />}
+        tone={key === "dxy" ? "dxy" : "index"}
         value={latest ? latest[key].toFixed(3) : "—"}
         change={pct === null ? undefined : `${pct >= 0 ? "+" : ""}${pct.toFixed(2)}% 1D`}
         detail={latest?.date}
@@ -77,10 +80,10 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your closes. Please refresh to retry.</p>}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {card("dxy", "DXY", "US Dollar Index")}
         {card("exy", indexName, indexLabel)}
-        <LedgerSummaryCard label="Correlation (daily returns)" value={corr === null ? "—" : corr.toFixed(2)} detail={corr === null ? "Needs 4+ entries" : corr < -0.5 ? "Strong inverse relationship" : corr < 0 ? "Weak inverse relationship" : "Not inverse in this sample"} />
+        <LedgerSummaryCard label="Correlation" subtitle="Daily returns" icon={<Activity className="size-4" />} value={corr === null ? "—" : corr.toFixed(2)} detail={corr === null ? "Needs 4+ entries" : corr < -0.5 ? "Strong inverse relationship" : corr < 0 ? "Weak inverse relationship" : "Not inverse in this sample"} />
       </div>
 
       <div className="rounded-lg border border-border bg-card p-5">

@@ -10,3 +10,4 @@
 - [x] Replace marketing homepage with Google auth card; signed-out layouts and signed-in redirect to Fed Watch verified. External Google consent was not automated.
 - [x] Make sign out leave the whole app and land on the login page; back button and direct tracker links stay on login. Verified signed in at 1280px.
 - [x] Match all four bank probability card groups to the uploaded reference; signed-in empty layouts verified at 1280/768/360px, 13 tests passed. Populated-card visual checks need saved manual probability entries.
+- [ ] Match all three currency-pair summary groups to the bank-card styling and verify desktop/mobile rendering.
