@@ -51,6 +51,8 @@
   --color-dxy: var(--dxy);
   --color-exy: var(--exy);
   --color-dominant: var(--dominant);
+  --color-probability-card: var(--probability-card);
+  --color-probability-teal: var(--probability-teal);
   --color-auth-action: var(--auth-action);
   --color-auth-action-foreground: var(--auth-action-foreground);
   --color-auth-action-hover: var(--auth-action-hover);
@@ -90,6 +92,8 @@
   --destructive: oklch(0.64 0.2 25);
   --destructive-foreground: oklch(0.98 0 0);
   --positive: oklch(0.74 0.16 155);
+  --probability-card: oklch(0.18 0.025 265);
+  --probability-teal: oklch(0.78 0.13 175);
   --negative: oklch(0.66 0.2 25);
   --dxy: oklch(0.82 0.15 85);
   --exy: oklch(0.7 0.14 240);
@@ -195,6 +199,8 @@
   --positive: oklch(0.735 0.129 170);
   --negative: oklch(0.706 0.167 12);
   --dominant: oklch(0.78 0.13 200);
+  --probability-card: oklch(0.18 0.025 265);
+  --probability-teal: oklch(0.78 0.13 175);
   letter-spacing: 0;
 }
 

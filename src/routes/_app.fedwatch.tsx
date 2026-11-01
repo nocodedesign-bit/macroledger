@@ -10,7 +10,8 @@ import { todayISO, useLedger } from "@/hooks/use-ledger";
 import { FedWatchChart, type FedEntry } from "@/components/fedwatch-chart";
 import { LedgerDatePicker } from "@/components/ledger-date-picker";
 import { useAccount } from "@/hooks/use-account";
-import { LedgerSummaryCard } from "@/components/ledger-summary-card";
+import { ProbabilityCard } from "@/components/probability-card";
+import { dominantScenario } from "@/lib/probability-scenarios";
 import { LedgerInsights } from "@/components/ledger-insights";
 
 export const Route = createFileRoute("/_app/fedwatch")({
@@ -36,6 +37,7 @@ function FedWatchPage() {
   const [form, setForm] = useState({ date: todayISO(), fomcMeeting: "", cut: "", hold: "", hike: "", dxy: "", us02y: "" });
   const latest = entries[entries.length - 1];
   const prev = entries[entries.length - 2];
+  const top = dominantScenario(latest);
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,11 +69,11 @@ function FedWatchPage() {
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your entries. Please refresh to retry.</p>}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {(["cut", "hold", "hike"] as const).map((k) => {
           const d = latest && prev ? latest[k] - prev[k] : null;
           return (
-            <LedgerSummaryCard key={k} label={k} value={latest ? `${latest[k].toFixed(1)}%` : "—"} change={d === null ? undefined : `${d >= 0 ? "+" : ""}${d.toFixed(1)} pts 1D`} />
+            <ProbabilityCard key={k} kind={k} value={latest?.[k]} change={d} dominant={top === k} />
           );
         })}
       </div>

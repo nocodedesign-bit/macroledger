@@ -12,6 +12,7 @@ import { useAccount } from "@/hooks/use-account";
 import { ProbabilityCard } from "@/components/probability-card";
 import { LedgerInsights } from "@/components/ledger-insights";
 import { EntryDateControls } from "@/components/entry-date-controls";
+import { dominantScenario } from "@/lib/probability-scenarios";
 
 export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger, yieldName }: {
   bank: string; ledgerKey: string; indexName: string; indexKey: "bxy" | "jxy"; pairLedger: string; yieldName: string;
@@ -28,7 +29,7 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
   const shown = entryDate ? entries.filter((x) => x.date <= entryDate) : entries;
   const current = shown[shown.length - 1];
   const prev = shown[shown.length - 2];
-  const top = current ? (["cut", "hold", "hike"] as const).reduce((a, b) => (current[b] > current[a] ? b : a)) : null;
+  const top = dominantScenario(current);
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +64,7 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
       {!user && <p className="text-sm text-muted-foreground">Sign in to view and save your private ledger.</p>}
       {error && <p role="alert" className="text-sm text-negative">Could not load your entries. Please refresh to retry.</p>}
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {(["cut", "hold", "hike"] as const).map((k) => (
           <ProbabilityCard key={k} kind={k} value={current?.[k]} change={current && prev ? current[k] - prev[k] : null} dominant={top === k} />
         ))}
