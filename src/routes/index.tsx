@@ -4,7 +4,7 @@ import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GoogleMark } from "@/components/google-mark";
 import { useAccount } from "@/hooks/use-account";
-import { lovable } from "@/integrations/lovable/index";
+import { signInWithGoogle } from "@/lib/google-sign-in";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,8 +34,7 @@ function AuthPage() {
     try {
       // Cloud's managed Google flow sets the session; return to this public page
       // before the shared account provider redirects into the app.
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) throw result.error;
+      const result = await signInWithGoogle();
       if (result.redirected) return;
     } catch {
       setError("Google sign-in could not be completed. Please try again.");

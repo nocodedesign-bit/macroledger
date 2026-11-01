@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+import { signInWithGoogle as startGoogle } from "@/lib/google-sign-in";
 
 export function RegisterDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [mode, setMode] = useState<"register" | "signin">("register");
@@ -18,8 +18,7 @@ export function RegisterDialog({ open, onOpenChange }: { open: boolean; onOpenCh
   const signInWithGoogle = async () => {
     setBusy(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) throw result.error;
+      const result = await startGoogle();
       if (!result.redirected) onOpenChange(false);
     } catch {
       toast.error("Google sign-in failed. Please try again.");
