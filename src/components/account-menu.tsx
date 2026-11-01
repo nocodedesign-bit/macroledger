@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAccount } from "@/hooks/use-account";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+import { signInWithGoogle } from "@/lib/google-sign-in";
 import type { Json } from "@/integrations/supabase/types";
 import { ledgerFields, ledgerKeys } from "@/lib/ledger-catalog";
 
@@ -36,8 +36,7 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
   const signIn = async () => {
     setBusy(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) throw result.error;
+      const result = await signInWithGoogle();
       if (!result.redirected) setOpen(false);
     } catch { toast.error("Google sign-in failed. Please try again."); }
     finally { setBusy(false); }
