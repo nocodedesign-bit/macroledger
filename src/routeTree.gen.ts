@@ -18,6 +18,7 @@ import { Route as AppDxyVsExyRouteImport } from './routes/_app.dxy-vs-exy'
 import { Route as AppDxyVsJxyRouteImport } from './routes/_app.dxy-vs-jxy'
 import { Route as AppEcbWatchRouteImport } from './routes/_app.ecb-watch'
 import { Route as AppFedwatchRouteImport } from './routes/_app.fedwatch'
+import { Route as AppPolicySimulatorRouteImport } from './routes/_app.policy-simulator'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -63,6 +64,11 @@ const AppFedwatchRoute = AppFedwatchRouteImport.update({
   path: '/fedwatch',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPolicySimulatorRoute = AppPolicySimulatorRouteImport.update({
+  id: '/policy-simulator',
+  path: '/policy-simulator',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/dxy-vs-jxy': typeof AppDxyVsJxyRoute
   '/ecb-watch': typeof AppEcbWatchRoute
   '/fedwatch': typeof AppFedwatchRoute
+  '/policy-simulator': typeof AppPolicySimulatorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/dxy-vs-jxy': typeof AppDxyVsJxyRoute
   '/ecb-watch': typeof AppEcbWatchRoute
   '/fedwatch': typeof AppFedwatchRoute
+  '/policy-simulator': typeof AppPolicySimulatorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/_app/dxy-vs-jxy': typeof AppDxyVsJxyRoute
   '/_app/ecb-watch': typeof AppEcbWatchRoute
   '/_app/fedwatch': typeof AppFedwatchRoute
+  '/_app/policy-simulator': typeof AppPolicySimulatorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/dxy-vs-jxy'
     | '/ecb-watch'
     | '/fedwatch'
+    | '/policy-simulator'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/dxy-vs-jxy'
     | '/ecb-watch'
     | '/fedwatch'
+    | '/policy-simulator'
   id:
     | '__root__'
     | '/'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/_app/dxy-vs-jxy'
     | '/_app/ecb-watch'
     | '/_app/fedwatch'
+    | '/_app/policy-simulator'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -200,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFedwatchRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/policy-simulator': {
+      id: '/_app/policy-simulator'
+      path: '/policy-simulator'
+      fullPath: '/policy-simulator'
+      preLoaderRoute: typeof AppPolicySimulatorRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -211,6 +230,7 @@ interface AppRouteChildren {
   AppDxyVsJxyRoute: typeof AppDxyVsJxyRoute
   AppEcbWatchRoute: typeof AppEcbWatchRoute
   AppFedwatchRoute: typeof AppFedwatchRoute
+  AppPolicySimulatorRoute: typeof AppPolicySimulatorRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -221,6 +241,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDxyVsJxyRoute: AppDxyVsJxyRoute,
   AppEcbWatchRoute: AppEcbWatchRoute,
   AppFedwatchRoute: AppFedwatchRoute,
+  AppPolicySimulatorRoute: AppPolicySimulatorRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

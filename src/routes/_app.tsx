@@ -27,7 +27,8 @@ function AppLayout() {
           <AccountMenu iconOnly />
         </div>
         <div className="border-t border-border/50">
-          <nav aria-label="Market ledgers" className="mx-auto grid max-w-7xl grid-cols-2 gap-3 px-4 py-3 sm:px-6">
+          <nav aria-label="Market ledgers" className="mx-auto grid max-w-7xl grid-cols-2 gap-3 px-4 py-3 sm:grid-cols-3 sm:px-6">
+            <Link to="/policy-simulator" className={`col-span-2 flex h-11 items-center justify-center rounded-md border bg-card px-3 text-sm font-medium sm:order-last sm:col-span-1 ${pathname === "/policy-simulator" ? "border-primary/50 text-primary" : "border-input text-muted-foreground"}`}>Policy Simulator</Link>
             <Select value={activeBank?.[0] ?? ""} onValueChange={(value) => { const bank = banks.find(([to]) => to === value); if (bank) void navigate({ to: bank[0] }); }}>
               <SelectTrigger aria-label="Central bank watches" className={`h-11 min-w-0 bg-card font-medium [&>span]:truncate [&_svg]:shrink-0 ${activeBank ? "border-primary/50 text-primary" : "text-muted-foreground"}`}><SelectValue placeholder="Central Banks" /></SelectTrigger>
               <SelectContent className="ledger-app"><>{banks.map(([to, label]) => <SelectItem key={to} value={to} className="py-3 data-[state=checked]:text-primary">{label}</SelectItem>)}</></SelectContent>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, Search, FileJson, FileSpreadsheet } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,16 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
   const current = shown[shown.length - 1];
   const prev = shown[shown.length - 2];
   const top = dominantScenario(current);
+  const [query, setQuery] = useState("");
+  const filtered = query.trim() ? entries.filter((x) => x.date.includes(query.trim()) || (x.meeting ?? "").includes(query.trim())) : entries;
+  const exportFile = (kind: "csv" | "json") => {
+    const cols = ["date", "meeting", "cut", "hold", "hike", "indexClose", "bondYield"] as const;
+    const body = kind === "json" ? JSON.stringify(entries, null, 2)
+      : [cols.join(","), ...entries.map((e) => cols.map((c) => e[c] ?? "").join(","))].join("\n");
+    const url = URL.createObjectURL(new Blob([body], { type: kind === "json" ? "application/json" : "text/csv" }));
+    const a = document.createElement("a"); a.href = url; a.download = `${bank.toLowerCase()}-watch.${kind}`; a.click(); URL.revokeObjectURL(url);
+  };
+
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,14 +84,21 @@ export function BankWatchPage({ bank, ledgerKey, indexName, indexKey, pairLedger
 
       {user && <LedgerInsights defaultKey={ledgerKey} />}
 
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search records" placeholder="Search by record or meeting date…" value={query} onChange={(e) => setQuery(e.target.value)} className="h-11 bg-card pl-9" /></div>
+        <div className="flex gap-2">
+          <Button variant="outline" className="h-11" disabled={!entries.length} onClick={() => exportFile("csv")}><FileSpreadsheet /> CSV</Button>
+          <Button variant="outline" className="h-11" disabled={!entries.length} onClick={() => exportFile("json")}><FileJson /> JSON</Button>
+        </div>
+      </div>
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted text-left text-xs uppercase tracking-widest text-muted-foreground">
             <tr><th className="px-4 py-3">Record date</th><th className="px-4 py-3">{bank} meeting</th><th className="px-4 py-3 text-right">Cut</th><th className="px-4 py-3 text-right">Hold</th><th className="px-4 py-3 text-right">Hike</th><th className="px-4 py-3 text-right">{indexName}</th><th className="px-4 py-3 text-right">{yieldName}</th><th className="w-24" /></tr>
           </thead>
           <tbody className="font-mono">
-            {entries.length === 0 && <tr><td colSpan={8} className="px-4 py-10 text-center font-sans text-muted-foreground">No entries yet.</td></tr>}
-            {[...entries].reverse().map((e) => (
+            {filtered.length === 0 && <tr><td colSpan={8} className="px-4 py-10 text-center font-sans text-muted-foreground">{entries.length ? "No matching records." : "No entries yet."}</td></tr>}
+            {[...filtered].reverse().map((e) => (
               <tr key={e.date} className="border-t border-border">
                 <td className="px-4 py-3">{e.date}</td>
                 <td className="whitespace-nowrap px-4 py-3">{e.meeting ?? "—"}</td>
