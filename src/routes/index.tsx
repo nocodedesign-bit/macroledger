@@ -60,7 +60,7 @@ function AuthPage() {
   };
   const forgot = async () => {
     if (!email.trim()) { setError("Enter your email first, then tap \"Forgot password?\"."); return; }
-    setBusy(true); setError("");
+    setBusy(true); setError(""); setInfo("");
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` });
     setBusy(false);
     if (error) setError(error.message); else setInfo(`We sent a link to ${email.trim()} to set your password. Check your spam folder too.`);
@@ -85,11 +85,11 @@ function AuthPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" type="email" required maxLength={255} autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
               </div>
-              <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required minLength={6} maxLength={72} autoComplete={mode === "register" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
+                <button type="button" className="text-sm font-medium text-primary hover:underline" onClick={forgot}>Forgot password?</button>
               </div>
-              {mode === "signin" && <button type="button" className="text-sm text-primary hover:underline" onClick={forgot}>Forgot password?</button>}
+              <Input id="password" type="password" required minLength={6} maxLength={72} autoComplete={mode === "register" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
               {info && <p className="text-sm text-muted-foreground">{info}</p>}
               {error && <p role="alert" className="text-sm text-negative">{error}</p>}
               <Button className="h-11 w-full font-semibold" disabled={!ready || busy || !!user}>
