@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AppBoeWatchRouteImport } from './routes/_app.boe-watch'
 import { Route as AppBojWatchRouteImport } from './routes/_app.boj-watch'
 import { Route as AppDxyVsBxyRouteImport } from './routes/_app.dxy-vs-bxy'
@@ -27,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppBoeWatchRoute = AppBoeWatchRouteImport.update({
@@ -72,6 +78,7 @@ const AppPolicySimulatorRoute = AppPolicySimulatorRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/boe-watch': typeof AppBoeWatchRoute
   '/boj-watch': typeof AppBojWatchRoute
   '/dxy-vs-bxy': typeof AppDxyVsBxyRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/boe-watch': typeof AppBoeWatchRoute
   '/boj-watch': typeof AppBojWatchRoute
   '/dxy-vs-bxy': typeof AppDxyVsBxyRoute
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/_app/boe-watch': typeof AppBoeWatchRoute
   '/_app/boj-watch': typeof AppBojWatchRoute
   '/_app/dxy-vs-bxy': typeof AppDxyVsBxyRoute
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/reset-password'
     | '/boe-watch'
     | '/boj-watch'
     | '/dxy-vs-bxy'
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/reset-password'
     | '/boe-watch'
     | '/boj-watch'
     | '/dxy-vs-bxy'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/reset-password'
     | '/_app/boe-watch'
     | '/_app/boj-watch'
     | '/_app/dxy-vs-bxy'
@@ -145,6 +157,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/boe-watch': {
@@ -249,6 +269,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

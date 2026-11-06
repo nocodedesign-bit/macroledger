@@ -30,6 +30,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+  const [info, setInfo] = useState("");
   useEffect(() => {
     if (ready && user) void navigate({ to: "/fedwatch", replace: true });
   }, [ready, user, navigate]);
@@ -41,6 +42,11 @@ function AuthPage() {
       if (mode === "register") {
         const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: window.location.origin } });
         if (error) throw error;
+        if (data.user && data.user.identities?.length === 0) {
+          setMode("signin");
+          setError("This email already has an account (for example from Google sign-in), so no new confirmation email is sent. Sign in, or use \"Forgot password?\" to set a password.");
+          return;
+        }
         if (!data.session) setSent(true);
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
@@ -51,6 +57,13 @@ function AuthPage() {
     } finally {
       setBusy(false);
     }
+  };
+  const forgot = async () => {
+    if (!email.trim()) { setError("Enter your email first, then tap \"Forgot password?\"."); return; }
+    setBusy(true); setError("");
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` });
+    setBusy(false);
+    if (error) setError(error.message); else setInfo(`We sent a link to ${email.trim()} to set your password. Check your spam folder too.`);
   };
   return (
     <div className="auth-page min-h-dvh bg-background text-foreground">
@@ -63,7 +76,7 @@ function AuthPage() {
           <p className="mt-3 text-center text-sm leading-6 text-muted-foreground">Access your private daily macro ledgers and market rate trackers.</p>
           {sent ? (
             <div className="mt-8 space-y-4 text-center">
-              <p className="text-sm text-muted-foreground">We sent a confirmation link to <span className="font-medium text-foreground">{email}</span>. Click it to activate your account, then sign in.</p>
+              <p className="text-sm text-muted-foreground">We sent a confirmation link to <span className="font-medium text-foreground">{email}</span>. Click it to activate your account, then sign in. Not there? Check your spam folder.</p>
               <Button variant="outline" className="w-full" onClick={() => { setSent(false); setMode("signin"); }}>Back to sign in</Button>
             </div>
           ) : (
@@ -76,6 +89,8 @@ function AuthPage() {
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" required minLength={6} maxLength={72} autoComplete={mode === "register" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
               </div>
+              {mode === "signin" && <button type="button" className="text-sm text-primary hover:underline" onClick={forgot}>Forgot password?</button>}
+              {info && <p className="text-sm text-muted-foreground">{info}</p>}
               {error && <p role="alert" className="text-sm text-negative">{error}</p>}
               <Button className="h-11 w-full font-semibold" disabled={!ready || busy || !!user}>
                 {(busy || user) && <LoaderCircle className="motion-safe:animate-spin" />}
