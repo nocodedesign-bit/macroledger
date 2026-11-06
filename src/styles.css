@@ -75,44 +75,45 @@
 
 :root {
   --radius: 0.5rem;
-  --background: #12161c;
-  --foreground: oklch(0.95 0.005 250);
-  --card: oklch(0.2 0.014 250);
-  --card-foreground: oklch(0.95 0.005 250);
-  --popover: oklch(0.2 0.014 250);
-  --popover-foreground: oklch(0.95 0.005 250);
-  --primary: #f5b041;
-  --primary-foreground: oklch(0.18 0.02 250);
-  --secondary: oklch(0.26 0.015 250);
-  --secondary-foreground: oklch(0.95 0.005 250);
-  --muted: oklch(0.24 0.012 250);
-  --muted-foreground: oklch(0.66 0.02 250);
-  --accent: oklch(0.28 0.02 250);
-  --accent-foreground: oklch(0.95 0.005 250);
+  --background: #090704;
+  --foreground: #ffffff;
+  --card: #120e0a;
+  --card-foreground: #ffffff;
+  --popover: #120e0a;
+  --popover-foreground: #ffffff;
+  --primary: #c5a059;
+  --primary-foreground: #1a130b;
+  --secondary: #1a1410;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1410;
+  --muted-foreground: #9ca3af;
+  --accent: #1a1410;
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.64 0.2 25);
   --destructive-foreground: oklch(0.98 0 0);
   --positive: oklch(0.74 0.16 155);
-  --probability-card: oklch(0.18 0.025 265);
-  --probability-teal: oklch(0.78 0.13 175);
+  --probability-card: #120e0a;
+  --probability-teal: #8c713e;
   --negative: oklch(0.66 0.2 25);
-  --dxy: oklch(0.82 0.15 85);
-  --exy: oklch(0.7 0.14 240);
-  --border: oklch(0.3 0.015 250);
-  --input: oklch(0.32 0.015 250);
-  --ring: #f5b041;
-  --chart-1: oklch(0.82 0.15 85);
-  --chart-2: oklch(0.7 0.14 240);
+  --dxy: #c5a059;
+  --exy: #8c713e;
+  --dominant: #c5a059;
+  --border: #261c14;
+  --input: #261c14;
+  --ring: #c5a059;
+  --chart-1: #c5a059;
+  --chart-2: #8c713e;
   --chart-3: oklch(0.74 0.16 155);
   --chart-4: oklch(0.66 0.2 25);
   --chart-5: oklch(0.7 0.1 300);
-  --sidebar: oklch(0.2 0.014 250);
-  --sidebar-foreground: oklch(0.95 0.005 250);
-  --sidebar-primary: oklch(0.82 0.15 85);
-  --sidebar-primary-foreground: oklch(0.18 0.02 250);
-  --sidebar-accent: oklch(0.28 0.02 250);
-  --sidebar-accent-foreground: oklch(0.95 0.005 250);
-  --sidebar-border: oklch(0.3 0.015 250);
-  --sidebar-ring: oklch(0.82 0.15 85);
+  --sidebar: #120e0a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #c5a059;
+  --sidebar-primary-foreground: #1a130b;
+  --sidebar-accent: #1a1410;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #261c14;
+  --sidebar-ring: #c5a059;
 }
 
 .dark {
@@ -164,12 +165,12 @@
 
 /* Ledger-only palette preserves the public homepage's existing identity. */
 .auth-page {
-  --background: oklch(0.166 0.026 269);
-  --card: oklch(0.221 0.029 269);
-  --border: oklch(0.29 0.039 266);
-  --foreground: oklch(1 0 0);
-  --muted-foreground: oklch(0.686 0.033 260);
-  --primary: oklch(0.838 0.166 86);
+  --background: #090704;
+  --card: #120e0a;
+  --border: #261c14;
+  --foreground: #ffffff;
+  --muted-foreground: #9ca3af;
+  --primary: #c5a059;
   --ring: var(--primary);
   --auth-action: oklch(1 0 0);
   --auth-action-foreground: oklch(0.17 0.008 260);
@@ -181,26 +182,28 @@
 }
 
 .ledger-app {
-  --background: oklch(0.208 0.042 265.755);
-  --foreground: oklch(0.975 0.003 258);
-  --card: oklch(0.232 0.016 258);
+  --background: #090704;
+  --foreground: #ffffff;
+  --card: #120e0a;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.838 0.166 86);
-  --primary-foreground: oklch(0.14 0.008 258);
-  --secondary: oklch(0.302 0.029 258);
+  --primary: #c5a059;
+  --primary-foreground: #1a130b;
+  --secondary: #1a1410;
   --muted: var(--card);
-  --muted-foreground: oklch(0.691 0.014 258);
+  --muted-foreground: #9ca3af;
   --accent: var(--secondary);
-  --border: oklch(0.322 0.024 258);
+  --border: #261c14;
   --input: var(--border);
   --ring: var(--primary);
   --positive: oklch(0.735 0.129 170);
   --negative: oklch(0.706 0.167 12);
-  --dominant: oklch(0.78 0.13 200);
-  --probability-card: oklch(0.18 0.025 265);
-  --probability-teal: oklch(0.78 0.13 175);
+  --dominant: #c5a059;
+  --dxy: #c5a059;
+  --exy: #8c713e;
+  --probability-card: #120e0a;
+  --probability-teal: #8c713e;
   letter-spacing: 0;
 }
 
