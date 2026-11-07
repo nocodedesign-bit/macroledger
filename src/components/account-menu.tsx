@@ -18,6 +18,8 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [localCount, setLocalCount] = useState(0);
   const profile = useQuery({ queryKey: ["profile", user?.id], enabled: !!user, queryFn: async () => {
     if (!user) return null;
@@ -75,6 +77,21 @@ export function AccountMenu({ iconOnly = false }: { iconOnly?: boolean }) {
         {profile.error && <p role="alert" className="text-sm text-negative">Could not load your profile.</p>}
         <form className="space-y-3" onSubmit={async (event) => { event.preventDefault(); setBusy(true); const { error } = await supabase.from("profiles").update({ display_name: name.trim() }).eq("id", user.id); setBusy(false); if (error) toast.error("Could not save profile"); else { await queryClient.invalidateQueries({ queryKey: ["profile", user.id] }); toast.success("Profile saved"); } }}>
           <Label htmlFor="profile-name">Display name</Label><Input id="profile-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} /><Button disabled={busy || profile.isPending}>Save profile</Button>
+        </form>
+        <form className="space-y-3 border-t border-border pt-4" onSubmit={async (event) => {
+          event.preventDefault();
+          if (password.length < 6) { toast.error("Password must be at least 6 characters"); return; }
+          if (password !== confirm) { toast.error("Passwords do not match"); return; }
+          setBusy(true);
+          const { error } = await supabase.auth.updateUser({ password });
+          setBusy(false);
+          if (error) toast.error("Could not change password. Please sign in again and retry.");
+          else { setPassword(""); setConfirm(""); toast.success("Password changed"); }
+        }}>
+          <Label htmlFor="new-password">Change password</Label>
+          <Input id="new-password" type="password" autoComplete="new-password" placeholder="New password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input id="confirm-password" type="password" autoComplete="new-password" placeholder="Confirm new password" aria-label="Confirm new password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+          <Button variant="outline" disabled={busy || !password}>Update password</Button>
         </form>
         {localCount > 0 && <div className="space-y-3 border-t border-border pt-4"><p className="text-sm text-muted-foreground">{localCount} entries are saved in this browser. Import them into this account without replacing online entries.</p><Button variant="outline" disabled={busy} onClick={importEntries}><Upload />Import browser entries</Button></div>}
         <Button variant="outline" disabled={busy} onClick={async () => { setBusy(true); await queryClient.cancelQueries(); queryClient.clear(); const { error } = await supabase.auth.signOut(); setBusy(false); if (error) toast.error("Could not sign out"); else { setOpen(false); toast.success("Signed out"); } }}><LogOut />Sign out</Button>
