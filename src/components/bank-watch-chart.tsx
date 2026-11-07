@@ -19,7 +19,7 @@ export function BankWatchChart({ entries, dollarCloses, indexName, yieldName }: 
         <h2 className="text-lg font-semibold">Probability trend</h2>
         <TrendRangeControls range={range} />
         <Select value={overlay} onValueChange={setOverlay}>
-          <SelectTrigger aria-label="Chart overlay" className="w-full sm:w-64"><SelectValue /></SelectTrigger>
+          <SelectTrigger aria-label="Chart overlay" className="w-full sm:ml-auto sm:w-64"><SelectValue /></SelectTrigger>
           <SelectContent className="ledger-app">
             <SelectItem value="none">No overlay</SelectItem>
             <SelectItem value="indexClose">Overlay {indexName}</SelectItem>

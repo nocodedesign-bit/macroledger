@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TrendRangeControls, useTrendRange } from "@/components/trend-range-controls";
 
 export type FedEntry = { date: string; fomcMeeting?: string | undefined; cut: number; hold: number; hike: number; dxy?: number | undefined; us02y?: number | undefined };
 
@@ -8,15 +9,17 @@ export function FedWatchChart({ entries, dollarCloses }: { entries: FedEntry[]; 
   const [overlay, setOverlay] = useState("dxy");
   const showDxy = overlay === "dxy" || overlay === "both";
   const showYield = overlay === "us02y" || overlay === "both";
-  const data = entries.map((entry) => ({ ...entry, dxy: entry.dxy ?? dollarCloses.find((close) => close.date === entry.date)?.dxy ?? null, us02y: entry.us02y ?? null }));
+  const range = useTrendRange(entries);
+  const data = range.ranged.map((entry) => ({ ...entry, dxy: entry.dxy ?? dollarCloses.find((close) => close.date === entry.date)?.dxy ?? null, us02y: entry.us02y ?? null }));
   const hasOverlay = data.some((entry) => (showDxy && entry.dxy !== null) || (showYield && entry.us02y !== null));
 
   return (
     <section aria-label="Probability trend" className="border-y border-border py-6">
-      <div className="mb-6 grid min-w-0 grid-cols-1 items-center gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+      <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-3">
         <h2 className="text-lg font-semibold">Probability trend</h2>
+        <TrendRangeControls range={range} />
         <Select value={overlay} onValueChange={setOverlay}>
-          <SelectTrigger aria-label="Chart overlay" className="w-full sm:w-64"><SelectValue /></SelectTrigger>
+          <SelectTrigger aria-label="Chart overlay" className="w-full sm:ml-auto sm:w-64"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">No overlay</SelectItem>
             <SelectItem value="dxy">Overlay DXY</SelectItem>
@@ -26,7 +29,7 @@ export function FedWatchChart({ entries, dollarCloses }: { entries: FedEntry[]; 
         </Select>
       </div>
       <div className="h-80 min-w-0 sm:h-96">
-        {data.length === 0 ? <div className="flex h-full items-center justify-center text-sm text-muted-foreground">No daily entries yet</div> : (
+        {data.length === 0 ? <div className="flex h-full items-center justify-center text-sm text-muted-foreground">{entries.length ? "No entries in this date range" : "No daily entries yet"}</div> : (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 12, right: 4, bottom: 12, left: 0 }}>
               <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="4 4" />
