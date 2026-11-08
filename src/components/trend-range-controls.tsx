@@ -28,24 +28,30 @@ export function useTrendRange<T extends { date: string }>(entries: T[]) {
 
 export function TrendRangeControls({ range }: { range: ReturnType<typeof useTrendRange> }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-      <span className="text-sm text-muted-foreground">from date</span>
-      <div className="w-40"><LedgerDatePicker id="trend-from" label="From date" value={range.effFrom} onChange={range.setFrom} /></div>
-      <span className="text-sm text-muted-foreground">To</span>
-      <div className="w-40"><LedgerDatePicker id="trend-to" label="To date" value={range.effTo} onChange={range.setTo} /></div>
-      <span className="text-sm text-muted-foreground">show</span>
-      <div className="flex overflow-hidden rounded-md border border-border">
-        {PRESETS.map((days) => {
-          const active = range.latest !== "" && range.effTo === range.latest && range.effFrom === format(subDays(parseISO(range.latest), days - 1), "yyyy-MM-dd");
-          return (
-            <Button key={days} type="button" variant="ghost" size="sm" onClick={() => range.applyDays(days)}
-              className={`h-9 rounded-none px-3 font-mono text-xs ${active ? "bg-primary/15 text-primary" : "text-muted-foreground"}`}>
-              {days}D
-            </Button>
-          );
-        })}
+    <div className="grid w-full min-w-0 grid-cols-2 gap-x-3 gap-y-3 sm:flex sm:w-auto sm:items-end sm:gap-3">
+      <div className="min-w-0">
+        <span className="mb-1 block text-xs text-muted-foreground">From date</span>
+        <LedgerDatePicker compact id="trend-from" label="From date" value={range.effFrom} onChange={range.setFrom} />
       </div>
-      {range.isCustom && <Button type="button" variant="ghost" size="sm" className="h-9 px-3 text-xs text-muted-foreground" onClick={range.clear}>All</Button>}
+      <div className="min-w-0">
+        <span className="mb-1 block text-xs text-muted-foreground">To date</span>
+        <LedgerDatePicker compact id="trend-to" label="To date" value={range.effTo} onChange={range.setTo} />
+      </div>
+      <div className="col-span-2 flex min-w-0 items-center gap-2 sm:col-span-1 sm:pb-0.5">
+        <span className="shrink-0 text-sm text-muted-foreground">Show</span>
+        <div className="flex overflow-hidden rounded-md border border-border">
+          {PRESETS.map((days) => {
+            const active = range.latest !== "" && range.effTo === range.latest && range.effFrom === format(subDays(parseISO(range.latest), days - 1), "yyyy-MM-dd");
+            return (
+              <Button key={days} type="button" variant="ghost" size="sm" onClick={() => range.applyDays(days)}
+                className={`h-9 rounded-none px-3 font-mono text-xs ${active ? "bg-primary/15 text-primary" : "text-muted-foreground"}`}>
+                {days}D
+              </Button>
+            );
+          })}
+        </div>
+        {range.isCustom && <Button type="button" variant="ghost" size="sm" className="h-9 px-3 text-xs text-muted-foreground" onClick={range.clear}>All</Button>}
+      </div>
     </div>
   );
 }
