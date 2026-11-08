@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, DollarSign, Globe2, Activity } from "lucide-react";
+import { Plus, Trash2, Pencil, DollarSign, Globe2, Activity } from "lucide-react";
 import { toast } from "sonner";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
   const { user } = useAccount();
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
+  const [editingDate, setEditingDate] = useState<string | null>(null);
   const [form, setForm] = useState({ date: todayISO(), dxy: "", exy: "" });
   const latest = entries[entries.length - 1];
   const prev = entries[entries.length - 2];
@@ -43,7 +44,12 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
     const dxy = Number(form.dxy), exy = Number(form.exy);
     if (!Number.isFinite(dxy) || !Number.isFinite(exy) || !(dxy > 0) || !(exy > 0)) { toast.error("Enter valid positive closes"); return; }
     setSaving(true);
-    try { await saveRawEntry({ date: form.date, dxy, [pairKey]: exy }); toast.success("Daily close logged"); setOpen(false); }
+    try {
+      const existing = rawEntries.find((entry) => entry.date === form.date);
+      await saveRawEntry({ ...existing, date: form.date, dxy, [pairKey]: exy });
+      toast.success(editingDate ? "Daily close updated" : "Daily close logged");
+      setOpen(false);
+    }
     catch { toast.error("Could not save close. Please retry."); }
     finally { setSaving(false); }
   };
@@ -70,7 +76,7 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
           <h1 className="text-2xl font-bold sm:text-3xl">DXY vs {indexName}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Manual daily close ledger — US Dollar Index against the {indexLabel}.</p>
         </div>
-        <Button className="ledger-log h-12 w-full text-base font-semibold sm:w-auto sm:px-7 [&_svg]:size-5" disabled={!user} onClick={() => { setForm({ date: todayISO(), dxy: "", exy: "" }); setOpen(true); }}>
+        <Button className="ledger-log h-12 w-full text-base font-semibold sm:w-auto sm:px-7 [&_svg]:size-5" disabled={!user} onClick={() => { setEditingDate(null); setForm({ date: todayISO(), dxy: "", exy: "" }); setOpen(true); }}>
           <Plus /> Log today
         </Button>
       </div>
@@ -111,7 +117,7 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted text-left text-xs uppercase tracking-widest text-muted-foreground">
-            <tr><th className="px-4 py-3">Date</th><th className="px-4 py-3 text-right">DXY close</th><th className="px-4 py-3 text-right">1D</th><th className="px-4 py-3 text-right">{indexName} close</th><th className="px-4 py-3 text-right">1D</th><th className="w-12" /></tr>
+            <tr><th className="px-4 py-3">Date</th><th className="px-4 py-3 text-right">DXY close</th><th className="px-4 py-3 text-right">1D</th><th className="px-4 py-3 text-right">{indexName} close</th><th className="px-4 py-3 text-right">1D</th><th className="px-4 py-3 text-right">Actions</th></tr>
           </thead>
           <tbody className="font-mono">
             {entries.length === 0 && <tr><td colSpan={6} className="px-4 py-10 text-center font-sans text-muted-foreground">No closes logged yet. Click “Log today” to start.</td></tr>}
@@ -129,7 +135,12 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
                   <td className="px-4 py-3 text-right">{ch("dxy")}</td>
                   <td className="px-4 py-3 text-right">{e.exy.toFixed(3)}</td>
                   <td className="px-4 py-3 text-right">{ch("exy")}</td>
-                  <td className="px-2"><Button variant="ghost" size="icon" aria-label="Delete" onClick={() => remove(e.date)}><Trash2 /></Button></td>
+                  <td className="px-2">
+                    <div className="flex justify-end gap-1">
+                      <Button variant="ghost" size="icon" aria-label={`Edit close for ${e.date}`} title="Edit close" onClick={() => { setEditingDate(e.date); setForm({ date: e.date, dxy: String(e.dxy), exy: String(e.exy) }); setOpen(true); }}><Pencil /></Button>
+                      <Button variant="ghost" size="icon" aria-label={`Delete close for ${e.date}`} title="Delete close" onClick={() => remove(e.date)}><Trash2 /></Button>
+                    </div>
+                  </td>
                 </tr>
               ) };
             }).reverse().map((x) => x.row)}
@@ -137,17 +148,20 @@ export function CurrencyPairPage({ pairKey, indexName, indexLabel }: { pairKey: 
         </table>
       </div>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(nextOpen) => { if (!saving) setOpen(nextOpen); }}>
         <DialogContent className="ledger-app max-h-[90dvh] overflow-y-auto">
-          <DialogHeader><DialogTitle>Log daily close</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editingDate ? "Edit daily close" : "Log daily close"}</DialogTitle></DialogHeader>
           <form onSubmit={save} className="space-y-4">
-            <div className="space-y-2"><Label htmlFor="d">Date</Label><Input id="d" type="date" required value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
+            <div className="space-y-2"><Label htmlFor="d">Date</Label><Input id="d" type="date" required disabled={!!editingDate || saving} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2"><Label htmlFor="dxy">DXY daily close</Label><Input id="dxy" type="number" step="any" required placeholder="e.g. 103.250" value={form.dxy} onChange={(e) => setForm({ ...form, dxy: e.target.value })} /></div>
               <div className="space-y-2"><Label htmlFor="exy">{indexName} daily close</Label><Input id="exy" type="number" step="any" required placeholder="e.g. 108.400" value={form.exy} onChange={(e) => setForm({ ...form, exy: e.target.value })} /></div>
             </div>
-            {allEntries.some((x) => x.date === form.date) && <p className="text-xs text-muted-foreground">An entry for this date exists and will be replaced.</p>}
-            <DialogFooter><Button type="submit" disabled={saving}>{saving ? "Saving…" : "Save close"}</Button></DialogFooter>
+            {!editingDate && allEntries.some((x) => x.date === form.date) && <p className="text-xs text-muted-foreground">An entry for this date exists and will be replaced.</p>}
+            <DialogFooter>
+              <Button type="button" variant="outline" disabled={saving} onClick={() => setOpen(false)}>Cancel</Button>
+              <Button type="submit" disabled={saving}>{saving ? "Saving…" : editingDate ? "Save changes" : "Save close"}</Button>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
